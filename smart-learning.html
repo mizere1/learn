@@ -1,0 +1,2187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excellence Assured — Learning Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f0f4ff;
+  --white:#ffffff;
+  --surface:#f8faff;
+  --blue:#1a4fba;
+  --blue-mid:#2563eb;
+  --blue-dark:#0f2d6b;
+  --blue-light:#dbeafe;
+  --blue-pale:#eff6ff;
+  --blue-border:#bfdbfe;
+  --text:#111827;
+  --text-mid:#374151;
+  --text-soft:#6b7280;
+  --line:#e5e7eb;
+  --green:#16a34a;
+  --red:#dc2626;
+  --amber:#d97706;
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(26,79,186,.06);
+  --shadow-md:0 4px 12px rgba(26,79,186,.12),0 1px 3px rgba(0,0,0,.08);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:16px;line-height:1.7;}
+
+/* ── Layout ── */
+.shell{max-width:900px;margin:0 auto;padding:0 20px 100px;}
+
+/* ── Header ── */
+.site-header{background:var(--blue-dark);padding:0 16px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.2);}
+.header-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:14px 0;}
+.logo-mark{width:40px;height:40px;flex-shrink:0;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:#fff;letter-spacing:-.5px;}
+.header-text h1{font-size:18px;font-weight:700;color:#fff;line-height:1;}
+.header-text p{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px;}
+.header-badge{margin-left:auto;font-size:10px;font-weight:600;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:4px 12px;white-space:nowrap;font-family:'JetBrains Mono',monospace;}
+
+/* ── Step indicator ── */
+.steps{display:flex;gap:0;margin:20px 0 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--blue-border);background:var(--white);box-shadow:var(--shadow);}
+.step{flex:1;padding:12px 10px;text-align:center;font-size:12px;font-weight:600;color:var(--text-soft);background:var(--white);border-right:1px solid var(--blue-border);cursor:default;transition:all .2s;}
+.step:last-child{border-right:none;}
+.step-num{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--blue-border);margin-bottom:2px;font-weight:500;}
+.step.active{background:var(--blue-pale);color:var(--blue-dark);}
+.step.active .step-num{color:var(--blue-mid);}
+.step.done{background:var(--blue);color:#fff;}
+.step.done .step-num{color:rgba(255,255,255,.7);}
+
+/* ── Common Panel ── */
+.panel{background:var(--white);border:1px solid var(--blue-border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-top:20px;}
+.panel-head{background:var(--blue-pale);border-bottom:1px solid var(--blue-border);padding:14px 18px;}
+.panel-title{font-size:14px;font-weight:700;color:var(--blue-dark);}
+.panel-sub{font-size:12px;color:var(--text-soft);margin-top:2px;}
+.panel-body{padding:20px 22px;}
+
+/* ── Buttons ── */
+.btn-primary{background:var(--blue);color:#fff;border:none;border-radius:var(--radius-sm);padding:12px 22px;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;cursor:pointer;transition:background .18s,box-shadow .18s;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:7px;box-shadow:var(--shadow-md);}
+.btn-primary:hover{background:var(--blue-mid);box-shadow:0 4px 18px rgba(37,99,235,.25);}
+.btn-primary:active{transform:scale(.98);}
+.btn-primary:disabled{background:#9ab3e8;cursor:not-allowed;box-shadow:none;}
+.btn-secondary{background:var(--white);color:var(--blue);border:1.5px solid var(--blue-border);border-radius:var(--radius-sm);padding:11px 18px;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;justify-content:center;gap:6px;}
+.btn-secondary:hover{border-color:var(--blue-mid);background:var(--blue-pale);}
+.btn-ghost{background:none;border:none;color:var(--text-soft);font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;padding:6px 10px;border-radius:var(--radius-sm);transition:all .15s;}
+.btn-ghost:hover{background:var(--surface);color:var(--text);}
+
+/* ── WIZARD ── */
+.wizard-wrap{margin-top:20px;}
+.wizard-screen{display:none;}
+.wizard-screen.active{display:block;}
+
+/* Wizard step 1 – search */
+.wiz-hero{text-align:center;padding:40px 24px 32px;}
+.wiz-hero-icon{font-size:52px;margin-bottom:16px;}
+.wiz-hero h2{font-size:24px;font-weight:800;color:var(--blue-dark);margin-bottom:8px;}
+.wiz-hero p{font-size:14px;color:var(--text-soft);max-width:380px;margin:0 auto 28px;}
+.wiz-input-wrap{position:relative;max-width:500px;margin:0 auto;}
+.wiz-input{width:100%;border:2px solid var(--blue-border);border-radius:var(--radius);padding:16px 20px 16px 52px;font-size:16px;font-family:'Inter',sans-serif;color:var(--text);background:var(--white);outline:none;transition:border-color .18s,box-shadow .18s;box-shadow:var(--shadow);}
+.wiz-input::placeholder{color:#aab4c8;}
+.wiz-input:focus{border-color:var(--blue-mid);box-shadow:0 0 0 4px rgba(37,99,235,.1);}
+.wiz-input-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-soft);}
+.wiz-btn-row{margin-top:20px;display:flex;justify-content:center;}
+
+/* Wizard step 2 – level */
+.level-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px;}
+.level-card{border:2px solid var(--blue-border);border-radius:var(--radius);padding:20px 16px;cursor:pointer;transition:all .2s;background:var(--white);text-align:center;position:relative;}
+.level-card:hover{border-color:var(--blue-mid);background:var(--blue-pale);transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.level-card.selected{border-color:var(--blue);background:var(--blue);color:#fff;box-shadow:0 4px 18px rgba(26,79,186,.3);}
+.level-card.selected .lc-mods,.level-card.selected .lc-dur{color:rgba(255,255,255,.75);}
+.lc-icon{font-size:32px;margin-bottom:10px;}
+.lc-name{font-size:16px;font-weight:700;margin-bottom:4px;}
+.lc-mods{font-size:12px;color:var(--text-soft);font-family:'JetBrains Mono',monospace;}
+.lc-dur{font-size:11px;color:var(--text-soft);margin-top:3px;}
+.lc-check{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+.level-card.selected .lc-check{opacity:1;}
+
+/* Wizard step 3 – results */
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.results-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-soft);}
+.results-grid{display:grid;grid-template-columns:1fr;gap:8px;max-height:380px;overflow-y:auto;padding-right:4px;}
+.results-grid::-webkit-scrollbar{width:4px;}
+.results-grid::-webkit-scrollbar-thumb{background:var(--blue-light);border-radius:4px;}
+.result-card{border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:14px 16px;cursor:pointer;transition:all .18s;background:var(--white);display:flex;align-items:center;gap:14px;}
+.result-card:hover{border-color:var(--blue-mid);background:var(--blue-pale);transform:translateX(3px);}
+.rc-num{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;background:var(--blue-light);color:var(--blue);border-radius:6px;padding:4px 8px;flex-shrink:0;min-width:40px;text-align:center;}
+.rc-name{font-size:14px;font-weight:600;color:var(--text);flex:1;}
+.rc-arrow{color:var(--blue-border);flex-shrink:0;transition:color .15s,transform .15s;}
+.result-card:hover .rc-arrow{color:var(--blue);transform:translateX(3px);}
+
+/* Wizard step nav */
+.wiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid var(--line);}
+.wiz-progress{display:flex;gap:6px;}
+.wiz-dot{width:8px;height:8px;border-radius:50%;background:var(--blue-border);transition:background .2s;}
+.wiz-dot.active{background:var(--blue);}
+.wiz-dot.done{background:var(--blue-mid);}
+
+/* ── LEARNER SECTION ── */
+.course-header{background:var(--blue-dark);border-radius:var(--radius) var(--radius) 0 0;padding:20px 22px;}
+.course-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:6px;}
+.course-title-main{font-size:22px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:12px;}
+.course-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.meta-pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;color:rgba(255,255,255,.85);font-weight:500;font-size:11px;font-family:'JetBrains Mono',monospace;}
+
+/* Progress bar */
+.progress-section{background:var(--blue-pale);border-bottom:1px solid var(--blue-border);padding:14px 20px;}
+.progress-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+.progress-breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--blue-dark);}
+.bc-sep{color:var(--blue-border);}
+.bc-year{background:var(--blue);color:#fff;border-radius:20px;padding:2px 10px;font-size:11px;font-family:'JetBrains Mono',monospace;}
+.bc-sem{background:var(--blue-light);color:var(--blue);border-radius:20px;padding:2px 10px;font-size:11px;font-family:'JetBrains Mono',monospace;}
+.bc-mod{color:var(--text-soft);font-size:11px;font-family:'JetBrains Mono',monospace;}
+.progress-bar-outer{height:6px;background:var(--blue-border);border-radius:3px;overflow:hidden;}
+.progress-bar-inner{height:100%;background:linear-gradient(90deg,var(--blue-mid),var(--blue));border-radius:3px;transition:width .5s ease;}
+
+/* Module card */
+.module-card-wrap{padding:24px 22px;}
+.module-card{background:var(--white);border:2px solid var(--blue-border);border-radius:var(--radius);padding:28px 28px 24px;box-shadow:var(--shadow-md);transition:box-shadow .2s;animation:fadeUp .3s ease both;}
+.mc-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:18px;}
+.mc-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;background:var(--blue);color:#fff;border-radius:6px;padding:5px 10px;flex-shrink:0;white-space:nowrap;margin-top:3px;}
+.mc-badge.research{background:var(--amber);}
+.mc-title{font-size:20px;font-weight:800;color:var(--blue-dark);line-height:1.3;}
+.mc-desc{font-size:14px;color:var(--text-mid);line-height:1.7;border-top:1px solid var(--line);padding-top:14px;margin-top:14px;}
+.mc-desc:empty{display:none;}
+.mc-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+.mc-actions .btn-primary{font-size:13px;padding:10px 18px;}
+
+/* Navigation */
+.module-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 22px 22px;gap:12px;}
+.mod-count-badge{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-soft);background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:4px 14px;white-space:nowrap;}
+.nav-btn{display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1.5px solid var(--blue-border);border-radius:var(--radius-sm);padding:10px 16px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;transition:all .18s;}
+.nav-btn:hover:not(:disabled){background:var(--blue);color:#fff;border-color:var(--blue);}
+.nav-btn:disabled{opacity:.35;cursor:not-allowed;}
+.nav-btn-finish{background:var(--green);color:#fff;border-color:var(--green);}
+.nav-btn-finish:hover:not(:disabled){background:#15803d;border-color:#15803d;}
+
+/* Course outline */
+.outline-toggle{width:100%;background:none;border:none;border-top:1px solid var(--blue-border);padding:12px 20px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .15s;}
+.outline-toggle:hover{background:var(--blue-pale);}
+.outline-chevron{transition:transform .25s;}
+.outline-chevron.open{transform:rotate(180deg);}
+.outline-body{display:none;padding:0 20px 16px;max-height:420px;overflow-y:auto;}
+.outline-body.open{display:block;}
+.outline-body::-webkit-scrollbar{width:4px;}
+.outline-body::-webkit-scrollbar-thumb{background:var(--blue-light);border-radius:4px;}
+.outline-year-group{margin-top:12px;}
+.outline-year-label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;padding:4px 8px;background:var(--blue-light);border-radius:4px;display:inline-block;}
+.outline-sem-group{margin:8px 0 8px 8px;}
+.outline-sem-label{font-size:11px;font-weight:600;color:var(--text-soft);margin-bottom:5px;font-family:'JetBrains Mono',monospace;}
+.outline-mod-item{display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:all .15s;border:1px solid transparent;margin-bottom:2px;}
+.outline-mod-item:hover{background:var(--blue-pale);border-color:var(--blue-border);}
+.outline-mod-item.current{background:var(--blue);color:#fff;border-color:var(--blue);}
+.outline-mod-item.current .om-num,.outline-mod-item.current .om-title{color:#fff;}
+.om-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--blue);background:var(--blue-light);border-radius:4px;padding:2px 5px;flex-shrink:0;min-width:40px;text-align:center;margin-top:2px;}
+.outline-mod-item.current .om-num{background:rgba(255,255,255,.2);color:#fff;}
+.om-title{font-size:12px;font-weight:500;color:var(--text-mid);line-height:1.35;}
+.om-check{font-size:12px;margin-left:auto;flex-shrink:0;opacity:.6;}
+
+/* Action cards */
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 22px 22px;}
+.action-card{background:var(--white);border:1.5px solid var(--line);border-radius:var(--radius);padding:14px;cursor:pointer;font-family:inherit;text-align:left;transition:all .2s;display:flex;align-items:center;gap:12px;}
+.action-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.card-assign{border-left:3px solid var(--amber);}
+.card-exam{border-left:3px solid var(--red);}
+.ac-icon{font-size:24px;flex-shrink:0;}
+.ac-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-soft);margin-bottom:2px;font-family:'JetBrains Mono',monospace;}
+.ac-price{font-size:20px;font-weight:800;}
+.price-a{color:var(--amber);}.price-e{color:var(--red);}
+.ac-sub{font-size:10px;color:var(--text-soft);margin-top:2px;}
+
+/* Research box */
+.research-box-card{background:var(--blue-pale);border:1px solid var(--blue-border);border-left:3px solid var(--blue);border-radius:var(--radius);padding:16px 18px;margin:0 22px 0;}
+.research-box-card h3{font-size:13px;font-weight:700;color:var(--blue-dark);margin-bottom:10px;}
+.research-list{list-style:none;}
+.research-list li{font-size:12.5px;color:var(--text-mid);display:flex;align-items:flex-start;gap:8px;padding:3px 0;}
+.research-list li::before{content:'→';color:var(--blue);flex-shrink:0;font-weight:700;}
+
+/* ── Resources Section ── */
+.unit-search-bar{background:var(--white);border:1px solid var(--blue-border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);}
+.unit-search-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:8px;font-family:'JetBrains Mono',monospace;display:block;}
+.input-row{display:flex;gap:10px;}
+.input-wrap{flex:1;position:relative;}
+.input-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-soft);pointer-events:none;}
+.text-input{width:100%;border:1.5px solid var(--blue-border);border-radius:var(--radius-sm);padding:12px 14px 12px 40px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);background:var(--white);outline:none;transition:border-color .18s,box-shadow .18s;}
+.text-input::placeholder{color:#aab4c8;}
+.text-input:focus{border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+
+/* Tabs */
+.content-tabs{display:flex;background:var(--white);border:1px solid var(--blue-border);border-radius:var(--radius);overflow:hidden;margin-top:14px;box-shadow:var(--shadow);}
+.tab-btn{flex:1;padding:12px 8px;border:none;background:transparent;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--text-soft);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;border-bottom:2.5px solid transparent;}
+.tab-btn.t-active-v{color:var(--blue);border-bottom-color:var(--blue);background:var(--blue-pale);}
+.tab-btn.t-active-n{color:var(--blue-dark);border-bottom-color:var(--blue-dark);background:var(--blue-pale);}
+.tab-btn:hover:not(.t-active-v):not(.t-active-n){background:var(--surface);}
+
+/* Video grid */
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;padding:16px 0;}
+.video-card{background:var(--white);border:1.5px solid var(--line);border-radius:var(--radius);overflow:hidden;text-decoration:none;display:block;color:inherit;transition:all .2s;box-shadow:var(--shadow);}
+.video-card:hover{border-color:var(--blue-mid);box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.thumb-wrap{position:relative;padding-top:56.25%;background:var(--blue-pale);overflow:hidden;}
+.thumb-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+.video-card:hover .thumb-wrap img{transform:scale(1.04);}
+.play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(26,79,186,.15);opacity:0;transition:opacity .2s;}
+.video-card:hover .play-overlay{opacity:1;}
+.play-ring{width:48px;height:48px;border-radius:50%;background:rgba(220,38,38,.88);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(220,38,38,.4);}
+.play-ring svg{width:20px;height:20px;fill:#fff;margin-left:3px;}
+.video-info{padding:11px 13px;}
+.video-title{font-size:12.5px;font-weight:600;color:var(--text);line-height:1.45;margin-bottom:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.video-channel{display:flex;align-items:center;gap:6px;}
+.ch-avatar{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-mid));font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ch-name{font-size:11px;color:var(--text-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* Notes */
+#notesPanel{display:none;}
+.notes-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;padding:14px 0 0;}
+.notes-search-wrap{position:relative;flex:1;min-width:180px;}
+.notes-search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-soft);pointer-events:none;}
+.notes-search-input{width:100%;background:var(--white);border:1.5px solid var(--blue-border);border-radius:var(--radius-sm);padding:8px 12px 8px 34px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text);outline:none;transition:border-color .2s;}
+.notes-search-input:focus{border-color:var(--blue-mid);}
+.notes-search-input::placeholder{color:#aab4c8;}
+.notes-stats{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-soft);white-space:nowrap;}
+.notes-body{background:var(--white);border:1px solid var(--blue-border);border-radius:var(--radius);padding:24px 26px;min-height:300px;font-size:14px;line-height:1.8;color:var(--text-mid);box-shadow:var(--shadow);}
+.notes-body h1,.notes-body h2{font-size:17px;font-weight:700;color:var(--blue-dark);margin:20px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--blue-border);}
+.notes-body h3{font-size:14px;font-weight:700;color:var(--blue);margin:14px 0 7px;}
+.notes-body p{margin-bottom:11px;}
+.notes-body ul,.notes-body ol{padding-left:20px;margin-bottom:11px;}
+.notes-body li{margin-bottom:4px;}
+.notes-body a{color:var(--blue-mid);text-decoration:none;}
+.notes-body a:hover{text-decoration:underline;}
+mark{background:rgba(37,99,235,.15);color:var(--blue-dark);border-radius:3px;padding:0 2px;}
+.notes-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;gap:12px;color:var(--text-soft);}
+.spin-ring{width:32px;height:32px;border:3px solid var(--blue-light);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;}
+.notes-loading span{font-family:'JetBrains Mono',monospace;font-size:12px;}
+
+/* Status / misc */
+.status-bar{margin-top:10px;font-size:12px;display:flex;align-items:center;gap:7px;min-height:18px;color:var(--text-soft);font-family:'JetBrains Mono',monospace;}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.dot-green{background:var(--green);}
+.dot-red{background:var(--red);animation:blink 1s infinite;}
+.dot-amber{background:var(--amber);animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.loading-row{display:flex;align-items:center;gap:8px;color:var(--text-soft);font-size:13px;padding:14px 0;font-family:'JetBrains Mono',monospace;}
+.spin{width:16px;height:16px;border:2px solid var(--blue-light);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty-state{padding:48px 24px;text-align:center;}
+.empty-icon{font-size:36px;margin-bottom:12px;}
+.empty-state h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.empty-state p{font-size:13px;color:var(--text-soft);max-width:300px;margin:0 auto;line-height:1.6;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+
+/* Support & Footer */
+.support-card{background:var(--white);border:1px solid var(--blue-border);border-left:3px solid var(--red);border-radius:var(--radius);padding:16px 18px;display:flex;align-items:flex-start;gap:14px;margin-top:20px;box-shadow:var(--shadow);}
+.support-icon{font-size:20px;flex-shrink:0;}
+.support-card h3{font-size:13px;font-weight:700;color:var(--red);margin-bottom:3px;}
+.support-card p{font-size:12px;color:var(--text-soft);margin-bottom:8px;line-height:1.5;}
+.call-btn{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;padding:7px 14px;border-radius:var(--radius-sm);text-decoration:none;font-size:12px;font-weight:600;transition:background .2s;}
+.call-btn:hover{background:var(--blue-mid);}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,45,107,.55);backdrop-filter:blur(6px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border:1px solid var(--blue-border);border-radius:var(--radius);padding:26px 24px;width:100%;max-width:360px;box-shadow:0 24px 60px rgba(26,79,186,.2);animation:popIn .22s ease;}
+@keyframes popIn{from{opacity:0;transform:scale(.94) translateY(10px);}to{opacity:1;transform:none;}}
+.modal h2{font-size:18px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.modal-meta{font-size:11px;color:var(--text-soft);margin-bottom:18px;font-family:'JetBrains Mono',monospace;}
+.price-display{font-size:40px;font-weight:800;text-align:center;margin:14px 0;}
+.modal-note{font-size:11px;color:var(--text-soft);text-align:center;margin-bottom:18px;}
+.modal-actions{display:flex;gap:10px;}
+.btn-wa{flex:1;background:#25D366;color:#fff;border:none;border-radius:var(--radius-sm);padding:12px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .2s;}
+.btn-wa:hover{background:#1eb855;}
+.btn-cancel{flex:1;background:var(--surface);color:var(--text-soft);border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:12px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-cancel:hover{background:var(--line);color:var(--text);}
+.site-footer{text-align:center;padding:28px 0 12px;font-size:11px;color:var(--text-soft);font-family:'JetBrains Mono',monospace;border-top:1px solid var(--line);margin-top:32px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.fade-up{animation:fadeUp .35s ease both;}
+
+@media(max-width:600px){
+  .level-cards{grid-template-columns:1fr;}
+  .action-row{grid-template-columns:1fr;}
+  .course-title-main{font-size:18px;}
+  .steps{font-size:11px;}.step{padding:10px 6px;}
+  .mc-title{font-size:17px;}
+  .module-nav{flex-wrap:wrap;justify-content:center;gap:8px;}
+  .shell{padding:0 12px 60px;}
+  .module-card{padding:18px;}
+  .wiz-hero{padding:28px 16px 20px;}
+  .wiz-hero h2{font-size:20px;}
+  .video-grid{grid-template-columns:1fr;}
+}
+@media(max-width:400px){.header-badge{display:none;}.steps .step-num{display:none;}}
+button:focus,input:focus{outline:2px solid var(--blue-mid);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<!-- Sticky Header -->
+<div class="site-header">
+  <div class="header-inner">
+    <div class="logo-mark">EA</div>
+    <div class="header-text">
+      <h1>Excellence Assured</h1>
+      <p>Structured Learning Platform</p>
+    </div>
+    <span class="header-badge">75 Programmes</span>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- Step Indicator -->
+  <div class="steps" id="stepBar">
+    <div class="step active" id="step1"><span class="step-num">STEP 1</span>Find Course</div>
+    <div class="step" id="step2"><span class="step-num">STEP 2</span>Study Curriculum</div>
+    <div class="step" id="step3"><span class="step-num">STEP 3</span>Unit Resources</div>
+  </div>
+
+  <!-- ═══ SECTION 1: WIZARD ═══ -->
+  <section id="sec-wizard">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title" id="wizPanelTitle">Step 1 of 3 — Enter Your Course Name</div>
+        <div class="panel-sub" id="wizPanelSub">Tell us what you'd like to study</div>
+      </div>
+      <div class="panel-body" style="padding-bottom:24px;">
+
+        <!-- Sub-screen 1: Course name input -->
+        <div class="wizard-screen active" id="wScreen1">
+          <div class="wiz-hero">
+            <div class="wiz-hero-icon">🎓</div>
+            <h2>What would you like to study?</h2>
+            <p>Type a course name — or a keyword like "Finance", "Health", "Management"</p>
+            <div class="wiz-input-wrap">
+              <span class="wiz-input-icon">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+              </span>
+              <input id="wizNameInput" class="wiz-input" type="text" placeholder="e.g. Business Administration, Public Health…" autocomplete="off" spellcheck="false"/>
+            </div>
+          </div>
+          <div class="wiz-nav">
+            <div class="wiz-progress">
+              <div class="wiz-dot active" id="wd1"></div>
+              <div class="wiz-dot" id="wd2"></div>
+              <div class="wiz-dot" id="wd3"></div>
+            </div>
+            <button class="btn-primary" onclick="wizardNext(1)">
+              Continue
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sub-screen 2: Level selection -->
+        <div class="wizard-screen" id="wScreen2">
+          <p style="font-size:14px;color:var(--text-soft);margin-bottom:16px;">Great! Now choose your qualification level:</p>
+          <div class="level-cards">
+            <div class="level-card" id="lcDiploma" onclick="selectLevel('diploma',this)">
+              <div class="lc-icon">📜</div>
+              <div class="lc-name">Diploma</div>
+              <div class="lc-mods">14 modules</div>
+              <div class="lc-dur">12–18 Months · 120 Credits</div>
+              <div class="lc-check">✓</div>
+            </div>
+            <div class="level-card" id="lcDegree" onclick="selectLevel('degree',this)">
+              <div class="lc-icon">🎓</div>
+              <div class="lc-name">Degree</div>
+              <div class="lc-mods">36 modules · 4 years</div>
+              <div class="lc-dur">3–4 Years · 360–480 Credits</div>
+              <div class="lc-check">✓</div>
+            </div>
+            <div class="level-card" id="lcMasters" onclick="selectLevel('masters',this)">
+              <div class="lc-icon">🏛️</div>
+              <div class="lc-name">Masters</div>
+              <div class="lc-mods">8 taught + research</div>
+              <div class="lc-dur">12–24 Months · 180 Credits</div>
+              <div class="lc-check">✓</div>
+            </div>
+          </div>
+          <div class="wiz-nav">
+            <button class="btn-secondary" onclick="wizardBack(2)">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+              Back
+            </button>
+            <div class="wiz-progress">
+              <div class="wiz-dot done" id="wd1b"></div>
+              <div class="wiz-dot active" id="wd2b"></div>
+              <div class="wiz-dot" id="wd3b"></div>
+            </div>
+            <button class="btn-primary" onclick="wizardNext(2)">
+              Show Courses
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sub-screen 3: Course results -->
+        <div class="wizard-screen" id="wScreen3">
+          <div class="results-header">
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--blue-dark);" id="resultsTitle">Matching Courses</div>
+              <div class="results-count" id="resultsCount"></div>
+            </div>
+            <button class="btn-ghost" onclick="wizardBack(3)" style="font-size:12px;color:var(--blue);border:1px solid var(--blue-border);border-radius:var(--radius-sm);padding:6px 12px;font-weight:600;">
+              ← Change
+            </button>
+          </div>
+          <div class="results-grid" id="resultsGrid"></div>
+          <div class="wiz-nav" style="margin-top:14px;">
+            <div class="wiz-progress">
+              <div class="wiz-dot done"></div>
+              <div class="wiz-dot done"></div>
+              <div class="wiz-dot active"></div>
+            </div>
+            <div style="font-size:12px;color:var(--text-soft);font-family:'JetBrains Mono',monospace;">Click a course to begin →</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 2: MODULE-BY-MODULE LEARNER ═══ -->
+  <section id="sec-learner" style="display:none;">
+    <div class="panel" style="overflow:visible;">
+
+      <!-- Course header -->
+      <div class="course-header">
+        <div class="course-label" id="lrnLabel"></div>
+        <div class="course-title-main" id="lrnTitle"></div>
+        <div class="course-meta" id="lrnMeta"></div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-section">
+        <div class="progress-label">
+          <div class="progress-breadcrumb">
+            <span class="bc-year" id="bcYear">Year 1</span>
+            <span class="bc-sep">›</span>
+            <span class="bc-sem" id="bcSem">Semester 1</span>
+            <span class="bc-sep">›</span>
+            <span class="bc-mod" id="bcMod">Module 1</span>
+          </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-soft);" id="lrnProgress">1 / 8</span>
+        </div>
+        <div class="progress-bar-outer">
+          <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Single Module Card -->
+      <div class="module-card-wrap">
+        <div class="module-card" id="moduleCard">
+          <div class="mc-header">
+            <span class="mc-badge" id="mcBadge">MOD 01</span>
+            <div class="mc-title" id="mcTitle">Module Title</div>
+          </div>
+          <div class="mc-desc" id="mcDesc"></div>
+          <div class="mc-actions">
+            <button class="btn-primary" onclick="openModuleResources()" id="mcResourceBtn">
+              <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+              Video Lectures & Notes
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module Navigation -->
+      <div class="module-nav">
+        <button class="nav-btn" id="btnPrev" onclick="navigateModule(-1)">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Previous
+        </button>
+        <span class="mod-count-badge" id="modCountBadge">1 of 8</span>
+        <button class="nav-btn" id="btnNext" onclick="navigateModule(1)">
+          Next
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <!-- Course Outline (expandable) -->
+      <button class="outline-toggle" onclick="toggleOutline()">
+        <span>📋 Full Course Outline</span>
+        <svg class="outline-chevron" id="outlineChevron" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="outline-body" id="outlineBody"></div>
+
+      <!-- Research Box (masters only) -->
+      <div id="researchBoxLrn" style="display:none;padding:0 0 6px;"></div>
+
+      <!-- Action cards removed -->
+
+      <!-- Back link -->
+      <div style="padding:0 22px 20px;border-top:1px solid var(--line);margin-top:4px;padding-top:14px;">
+        <button class="btn-ghost" onclick="backToWizard()" style="color:var(--blue);font-weight:600;">
+          ← Choose a Different Course
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 3: UNIT RESOURCES ═══ -->
+  <section id="sec-resources" style="display:none;margin-top:20px;">
+    <div class="unit-search-bar">
+      <span class="unit-search-label">// Unit Resources</span>
+      <div class="input-row">
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </span>
+          <input id="unitInput" class="text-input" style="font-size:14px;" type="text" placeholder="e.g. Strategic Management" autocomplete="off" spellcheck="false"/>
+        </div>
+        <button class="btn-primary" id="unitSearchBtn" onclick="doUnitSearch()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Find
+        </button>
+      </div>
+      <div class="status-bar" id="unitStatusBar"></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="content-tabs">
+      <button class="tab-btn t-active-v" id="tabVideo" onclick="switchTab('videos')">
+        <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+        Video Lectures
+      </button>
+      <button class="tab-btn" id="tabNotes" onclick="switchTab('notes')">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        Study Notes
+      </button>
+    </div>
+
+    <!-- Videos Panel -->
+    <div id="videosPanel">
+      <div class="video-grid" id="videoGrid">
+        <div class="empty-state"><div class="empty-icon">🎬</div><h3>No videos yet</h3><p>Click "Video Lectures & Notes" on any module above.</p></div>
+      </div>
+    </div>
+
+    <!-- Notes Panel -->
+    <div id="notesPanel">
+      <div class="notes-toolbar">
+        <div class="notes-search-wrap">
+          <span class="notes-search-icon"><svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+          <input id="notesSearch" class="notes-search-input" type="text" placeholder="Search within notes…" oninput="highlightNotes()"/>
+        </div>
+        <div class="notes-stats" id="notesStats"></div>
+      </div>
+      <div class="notes-body" id="notesContent">
+        <div class="notes-loading"><div class="spin-ring"></div><span>Loading notes…</span></div>
+      </div>
+    </div>
+
+    <div style="padding:14px 0 0;">
+      <button class="btn-ghost" onclick="backToLearner()" style="color:var(--blue);font-weight:600;">
+        ← Back to Course
+      </button>
+    </div>
+  </section>
+
+  <!-- Support -->
+  <div class="support-card">
+    <div class="support-icon">🚨</div>
+    <div>
+      <h3>Need Help?</h3>
+      <p>Can't find your course or experiencing issues? Contact Excellence Assured directly.</p>
+      <a class="call-btn" href="tel:0996982449">📞 0996 982 449</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">© <span id="yr"></span> Excellence Assured Learning · All rights reserved</footer>
+</div>
+
+<!-- Purchase Modal -->
+<div class="modal-overlay" id="purchaseModal">
+  <div class="modal">
+    <h2 id="modalTitle">Unit Assignments</h2>
+    <p class="modal-meta">Programme: <span id="modalUnit">—</span></p>
+    <div class="price-display" id="modalPrice">K5,000</div>
+    <p class="modal-note">You'll be redirected to WhatsApp (+265 996 982 449)</p>
+    <div class="modal-actions">
+      <button class="btn-wa" onclick="goWhatsApp()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Purchase on WhatsApp
+      </button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { auth } from './firebase-config.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        window.location.href = 'index.html';
+    }
+});
+
+const PROGRAMS = [
+  // Masters (26)
+  { name:"Masters in Business Administration (MBA)",              level:"masters", key:"mba",          num:1  },
+  { name:"Masters in Management (MIM)",                           level:"masters", key:"mim",          num:2  },
+  { name:"Masters in Finance / Financial Management",             level:"masters", key:"mfinance",     num:3  },
+  { name:"Masters in Accounting / Chartered Accounting Pathway",  level:"masters", key:"maccounting",  num:4  },
+  { name:"Masters in Marketing",                                  level:"masters", key:"mmarketing",   num:5  },
+  { name:"Masters in Human Resource Management",                  level:"masters", key:"mhrm",         num:6  },
+  { name:"Masters in Project Management",                         level:"masters", key:"mpm",          num:7  },
+  { name:"Masters in Public Health (MPH)",                        level:"masters", key:"mph",          num:8  },
+  { name:"Masters in Health Administration (MHA)",                level:"masters", key:"mha",          num:9  },
+  { name:"Masters in Social Work (MSW)",                          level:"masters", key:"msw",          num:10 },
+  { name:"Masters in Education (M.Ed)",                           level:"masters", key:"med",          num:11 },
+  { name:"Masters in Monitoring & Evaluation",                    level:"masters", key:"mme",          num:12 },
+  { name:"Masters in Development Studies",                        level:"masters", key:"mdevstudies",  num:13 },
+  { name:"Masters in International Relations",                    level:"masters", key:"mir",          num:14 },
+  { name:"Masters in Governance & Public Policy",                 level:"masters", key:"mgpp",         num:15 },
+  { name:"Masters in Data Analytics / Business Analytics",        level:"masters", key:"mda",          num:16 },
+  { name:"Masters in Supply Chain Management",                    level:"masters", key:"mscm",         num:17 },
+  { name:"Masters in Environmental Management",                   level:"masters", key:"menvm",        num:18 },
+  { name:"Masters in Leadership & Organizational Development",    level:"masters", key:"mlod",         num:19 },
+  { name:"Masters in Entrepreneurship / Innovation Management",   level:"masters", key:"meim",         num:20 },
+  { name:"Masters in Global Health / Health Policy",              level:"masters", key:"mgh",          num:21 },
+  { name:"Masters in Tourism & Hospitality Management",           level:"masters", key:"mthm",         num:22 },
+  { name:"Masters in Economics / Applied Economics",              level:"masters", key:"mecon",        num:23 },
+  { name:"Masters in Urban & Regional Planning",                  level:"masters", key:"murp",         num:24 },
+  { name:"Masters in Educational Leadership",                     level:"masters", key:"mel",          num:25 },
+  { name:"Masters in Health Informatics",                         level:"masters", key:"mhi",          num:26 },
+  // Degrees (24)
+  { name:"Degree in Business Administration (BBA)",               level:"degree",  key:"bba",          num:27 },
+  { name:"Degree in Management Studies (BMS)",                    level:"degree",  key:"bms",          num:28 },
+  { name:"Degree in Finance / Financial Management",              level:"degree",  key:"bfinance",     num:29 },
+  { name:"Degree in Accounting / Accounting & Finance",           level:"degree",  key:"baccounting",  num:30 },
+  { name:"Degree in Marketing",                                   level:"degree",  key:"bmarketing",   num:31 },
+  { name:"Degree in Human Resource Management",                   level:"degree",  key:"bhrm",         num:32 },
+  { name:"Degree in Operations Management",                       level:"degree",  key:"bops",         num:33 },
+  { name:"Degree in International Business",                      level:"degree",  key:"bib",          num:34 },
+  { name:"Degree in Entrepreneurship",                            level:"degree",  key:"bentrepreneurship", num:35 },
+  { name:"Degree in Economics",                                   level:"degree",  key:"becon",        num:36 },
+  { name:"Degree in Public Health",                               level:"degree",  key:"bph",          num:37 },
+  { name:"Degree in Nursing",                                     level:"degree",  key:"bnursing",     num:38 },
+  { name:"Degree in Health Administration",                       level:"degree",  key:"bha",          num:39 },
+  { name:"Degree in Social Work (BSW)",                           level:"degree",  key:"bsw",          num:40 },
+  { name:"Degree in Sociology",                                   level:"degree",  key:"bsociology",   num:41 },
+  { name:"Degree in Psychology",                                  level:"degree",  key:"bpsychology",  num:42 },
+  { name:"Degree in Education / Bachelor of Education (B.Ed)",   level:"degree",  key:"bed",          num:43 },
+  { name:"Degree in Political Science",                           level:"degree",  key:"bpolitics",    num:44 },
+  { name:"Degree in Environmental Studies",                       level:"degree",  key:"benviro",      num:45 },
+  { name:"Degree in Logistics & Supply Chain Management",         level:"degree",  key:"bscm",         num:46 },
+  { name:"Degree in Tourism & Hospitality Management",            level:"degree",  key:"bthm",         num:47 },
+  { name:"Degree in Information Systems Management",              level:"degree",  key:"bism",         num:48 },
+  { name:"Degree in Data Science / Business Analytics",           level:"degree",  key:"bds",          num:49 },
+  { name:"Degree in Global Health",                               level:"degree",  key:"bgh",          num:50 },
+  // Diplomas (25)
+  { name:"Diploma in Business Administration",                    level:"diploma", key:"dba",          num:51 },
+  { name:"Diploma in Management Studies",                         level:"diploma", key:"dms",          num:52 },
+  { name:"Diploma in Human Resource Management",                  level:"diploma", key:"dhrm",         num:53 },
+  { name:"Diploma in Marketing",                                  level:"diploma", key:"dmarketing",   num:54 },
+  { name:"Diploma in Project Management",                         level:"diploma", key:"dpm",          num:55 },
+  { name:"Diploma in Finance",                                    level:"diploma", key:"dfinance",     num:56 },
+  { name:"Diploma in Accounting",                                 level:"diploma", key:"daccounting",  num:57 },
+  { name:"Diploma in Public Health",                              level:"diploma", key:"dph",          num:58 },
+  { name:"Diploma in Health Administration",                      level:"diploma", key:"dha",          num:59 },
+  { name:"Diploma in Social Work",                                level:"diploma", key:"dsw",          num:60 },
+  { name:"Diploma in Education",                                  level:"diploma", key:"deducation",   num:61 },
+  { name:"Diploma in Monitoring & Evaluation",                    level:"diploma", key:"dme",          num:62 },
+  { name:"Diploma in Supply Chain Management",                    level:"diploma", key:"dscm",         num:63 },
+  { name:"Diploma in Entrepreneurship",                           level:"diploma", key:"dent",         num:64 },
+  { name:"Diploma in International Relations",                    level:"diploma", key:"dir",          num:65 },
+  { name:"Diploma in Leadership & Governance",                    level:"diploma", key:"dlg",          num:66 },
+  { name:"Diploma in Data Analytics",                             level:"diploma", key:"dda",          num:67 },
+  { name:"Diploma in Hospitality Management",                     level:"diploma", key:"dhm",          num:68 },
+  { name:"Diploma in Environmental Management",                   level:"diploma", key:"dem",          num:69 },
+  { name:"Diploma in Nonprofit Management",                       level:"diploma", key:"dnpm",         num:70 },
+  { name:"Diploma in Sustainable Development",                    level:"diploma", key:"dsd",          num:71 },
+  { name:"Diploma in Nonprofit Leadership & Management",          level:"diploma", key:"dnlm",         num:72 },
+  { name:"Postgraduate Diploma in Management (PGDM)",             level:"diploma", key:"pgdm",         num:73 },
+  { name:"Executive MBA (EMBA)",                                  level:"diploma", key:"emba",         num:74 },
+  { name:"Professional Diploma in Risk & Insurance",              level:"diploma", key:"dri",          num:75 },
+];
+
+const DISCIPLINE_MAP = {
+  mba:"Business & Management",mim:"Business & Management",mfinance:"Finance",maccounting:"Accounting",mmarketing:"Marketing",mhrm:"Human Resources",mpm:"Project Management",mph:"Public Health",mha:"Health Administration",msw:"Social Work",med:"Education",mme:"Monitoring & Evaluation",mdevstudies:"Development Studies",mir:"International Relations",mgpp:"Governance & Policy",mda:"Data Analytics",mscm:"Supply Chain",menvm:"Environmental Management",mlod:"Leadership & OD",meim:"Entrepreneurship & Innovation",mgh:"Global Health",mthm:"Tourism & Hospitality",mecon:"Economics",murp:"Urban Planning",mel:"Educational Leadership",mhi:"Health Informatics",
+  bba:"Business Administration",bms:"Management Studies",bfinance:"Finance",baccounting:"Accounting",bmarketing:"Marketing",bhrm:"Human Resources",bops:"Operations Management",bib:"International Business",bentrepreneurship:"Entrepreneurship",becon:"Economics",bph:"Public Health",bnursing:"Nursing",bha:"Health Administration",bsw:"Social Work",bsociology:"Sociology",bpsychology:"Psychology",bed:"Education",bpolitics:"Political Science",benviro:"Environmental Studies",bscm:"Logistics & Supply Chain",bthm:"Tourism & Hospitality",bism:"Information Systems",bds:"Data Science",bgh:"Global Health",
+  dba:"Business Administration",dms:"Management Studies",dhrm:"Human Resources",dmarketing:"Marketing",dpm:"Project Management",dfinance:"Finance",daccounting:"Accounting",dph:"Public Health",dha:"Health Administration",dsw:"Social Work",deducation:"Education",dme:"Monitoring & Evaluation",dscm:"Supply Chain",dent:"Entrepreneurship",dir:"International Relations",dlg:"Leadership & Governance",dda:"Data Analytics",dhm:"Hospitality Management",dem:"Environmental Management",dnpm:"Nonprofit Management",dsd:"Sustainable Development",dnlm:"Nonprofit Leadership",pgdm:"Postgraduate Management",emba:"Executive Business",dri:"Risk & Insurance"
+};
+
+/* ═══════════════════════════════════════════════
+   MASTERS MODULES (26 programmes × 8 taught modules)
+   ═══════════════════════════════════════════════ */
+const MASTERS_MODS = {
+  "mba":[
+    {t:"Strategic Management & Competitive Advantage",d:"Corporate strategy, competitive positioning, industry analysis and strategic execution"},
+    {t:"Financial Management & Corporate Finance",d:"Capital structure, investment appraisal, budgeting and firm valuation techniques"},
+    {t:"Marketing Management & Brand Strategy",d:"Customer value creation, brand positioning, digital marketing and market development"},
+    {t:"Organisational Behaviour & Leadership",d:"Human behaviour in organisations, leadership effectiveness and team dynamics"},
+    {t:"Operations & Supply Chain Management",d:"Process design, quality management and global supply chain strategy"},
+    {t:"Managerial Accounting & Performance Control",d:"Cost systems, variance analysis, budgeting and performance measurement frameworks"},
+    {t:"Business Research Methods",d:"Quantitative and qualitative approaches to management research and evidence-based practice"},
+    {t:"International Business & Digital Strategy",d:"Globalisation, market entry strategies, digital transformation and emerging business models"},
+  ],
+  "mim":[
+    {t:"Foundations of Management Theory",d:"Classical and contemporary management thought, paradigms and organisational frameworks"},
+    {t:"Organisational Behaviour & Culture",d:"Individual, group and organisational dynamics, culture diagnosis and intervention"},
+    {t:"Strategic Management",d:"Corporate and business-level strategy formulation, tools and implementation approaches"},
+    {t:"International Business Management",d:"Global business environments, cross-cultural management and international strategy"},
+    {t:"Human Capital Management",d:"Talent strategy, workforce development, engagement and succession planning"},
+    {t:"Innovation & Change Management",d:"Leading organisational transformation, managing innovation pipelines and creative leadership"},
+    {t:"Research Methods in Management",d:"Designing rigorous mixed-methods management research projects"},
+    {t:"Leadership in Global Organisations",d:"Leadership styles, diversity, ethics and practices in complex global settings"},
+  ],
+  "mfinance":[
+    {t:"Corporate Finance & Firm Valuation",d:"Capital structure, dividend policy, DCF and relative valuation techniques"},
+    {t:"Investment Analysis & Portfolio Management",d:"Asset classes, portfolio theory, factor models and performance measurement"},
+    {t:"Financial Risk Management",d:"Market, credit and operational risk: identification, measurement and governance frameworks"},
+    {t:"Derivatives & Financial Engineering",d:"Options, futures, swaps, structured products and risk-transfer instruments"},
+    {t:"International Financial Markets",d:"Foreign exchange markets, global capital flows, currency crises and FX risk management"},
+    {t:"Financial Econometrics",d:"Time-series modelling, GARCH, panel data and empirical finance techniques"},
+    {t:"Mergers, Acquisitions & Restructuring",d:"Deal structuring, due diligence, valuation in M&A and post-merger integration"},
+    {t:"Research Methods in Finance",d:"Quantitative research design, data sourcing and dissertation preparation in finance"},
+  ],
+  "maccounting":[
+    {t:"Advanced Financial Reporting & IFRS",d:"Complex financial statements, group accounts and application of international standards"},
+    {t:"Managerial & Cost Accounting",d:"Costing systems, marginal analysis, variance analysis and management decision-making"},
+    {t:"Auditing & Assurance",d:"Audit planning, risk-based auditing, evidence gathering and professional auditing standards"},
+    {t:"Taxation: Theory & Practice",d:"Corporate and personal tax planning, compliance and international tax concepts"},
+    {t:"Corporate Governance & Professional Ethics",d:"Board accountability, integrity, codes of conduct and fiduciary responsibilities"},
+    {t:"Financial Analysis & Strategic Decision Making",d:"Interpreting financial data, ratio analysis and accounting for strategic decisions"},
+    {t:"Research Methods in Accounting",d:"Empirical, qualitative and interpretive approaches to accounting research"},
+    {t:"Chartered Accounting Pathway & Case Studies",d:"Professional competencies, integrated scenarios and examination technique preparation"},
+  ],
+  "mmarketing":[
+    {t:"Strategic Marketing Management",d:"Marketing strategy, competitive positioning, market planning and strategic analysis"},
+    {t:"Consumer Behaviour & Psychology",d:"Buyer decision-making, motivation, perception and psychological influences on consumption"},
+    {t:"Digital Marketing & Analytics",d:"SEO, SEM, social media strategy, content marketing and performance analytics"},
+    {t:"Brand Management & Integrated Communications",d:"Brand equity, brand architecture, storytelling and integrated marketing communications"},
+    {t:"Market Research Methods",d:"Qualitative and quantitative research design, sampling, analysis and insight generation"},
+    {t:"Global Marketing Strategy",d:"Cross-cultural marketing, international market entry and adaptation strategies"},
+    {t:"Marketing Innovation & New Product Development",d:"Innovation processes, product lifecycle management and disruptive marketing strategies"},
+    {t:"Research Methods in Marketing",d:"Research design, methodological choices and dissertation preparation for marketers"},
+  ],
+  "mhrm":[
+    {t:"Strategic Human Resource Management",d:"Aligning HR strategy with organisational objectives and competitive positioning"},
+    {t:"Talent Acquisition & Workforce Planning",d:"Recruitment strategies, selection methods, talent pipeline development and workforce analytics"},
+    {t:"Learning, Development & Performance",d:"Training needs analysis, programme design, delivery and performance management systems"},
+    {t:"Employee Relations & Labour Law",d:"Employment law, industrial relations, collective bargaining and dispute resolution"},
+    {t:"Compensation, Benefits & Total Reward",d:"Pay structures, incentive systems, job evaluation and designing total reward packages"},
+    {t:"HR Analytics & People Data",d:"Measuring HR effectiveness, workforce analytics, dashboards and evidence-based HR decisions"},
+    {t:"Diversity, Equity & Inclusion",d:"Managing inclusive workplaces, DEI frameworks, bias awareness and equity practices"},
+    {t:"Research Methods in Human Resource Management",d:"Research design, mixed methods and dissertation preparation in HRM"},
+  ],
+  "mpm":[
+    {t:"Project Planning & Scheduling",d:"WBS, critical path method, Gantt charts, resource planning and project baseline management"},
+    {t:"Risk Management in Projects",d:"Risk identification, qualitative and quantitative risk assessment, mitigation and response"},
+    {t:"Project Finance & Cost Control",d:"Budgeting, earned value management, cost forecasting and financial reporting in projects"},
+    {t:"Agile, Scrum & Hybrid Methodologies",d:"Scrum framework, Kanban, adaptive planning and hybrid project delivery approaches"},
+    {t:"Stakeholder Management & Communication",d:"Stakeholder mapping, engagement strategies, communication planning and reporting"},
+    {t:"Quality Management in Projects",d:"Quality standards, ISO frameworks, audits, testing and continuous improvement in projects"},
+    {t:"Programme & Portfolio Management",d:"Managing multiple projects, portfolio prioritisation and aligning projects with strategy"},
+    {t:"Research Methods in Project Management",d:"Research design, evidence-based PM practice and dissertation preparation"},
+  ],
+  "mph":[
+    {t:"Epidemiology & Disease Surveillance",d:"Disease patterns, outbreak investigation, surveillance systems and epidemiological tools"},
+    {t:"Health Systems & Policy Analysis",d:"Health system organisation, financing mechanisms, governance and reform strategies"},
+    {t:"Biostatistics & Data Analysis",d:"Statistical methods, regression, survival analysis and interpretation for public health"},
+    {t:"Global Health Challenges & Burden of Disease",d:"Communicable and non-communicable disease trends, DALYs and global disease burden"},
+    {t:"Environmental & Occupational Health",d:"Hazard identification, exposure assessment, health impacts and risk communication"},
+    {t:"Social Determinants of Health",d:"Socioeconomic, cultural, environmental and structural drivers of health inequities"},
+    {t:"Health Promotion & Behaviour Change",d:"Behaviour change models, health communication strategies and community interventions"},
+    {t:"Research Methods in Public Health",d:"Study design, ethical review, data collection methods and public health research practice"},
+  ],
+  "mha":[
+    {t:"Health Systems Management",d:"Structures, functions, governance models and management in health organisations"},
+    {t:"Healthcare Finance & Budget Management",d:"Health economics, cost analysis, budgeting, financial reporting and resource allocation"},
+    {t:"Healthcare Policy & Regulatory Frameworks",d:"Policy cycle, regulatory compliance, accreditation and health system governance"},
+    {t:"Human Resource Management in Health",d:"Workforce planning, recruitment, staff motivation and retention in health settings"},
+    {t:"Quality Improvement & Patient Safety",d:"Quality frameworks, adverse event analysis, accreditation and risk management in health"},
+    {t:"Health Information Systems",d:"Digital health tools, EMR systems, data governance and health information management"},
+    {t:"Leadership in Healthcare Organisations",d:"Leadership styles, ethical leadership, change management and culture in health systems"},
+    {t:"Research Methods in Health Administration",d:"Evidence-based management research design and dissertation in health management"},
+  ],
+  "msw":[
+    {t:"Advanced Social Work Theory & Practice",d:"Contemporary theoretical frameworks, practice models and critical social work approaches"},
+    {t:"Social Policy & Welfare Systems",d:"Comparative social policy analysis, welfare state models and social protection frameworks"},
+    {t:"Community Development & Empowerment",d:"Participatory approaches, asset-based community development and community mobilisation"},
+    {t:"Child, Family & Statutory Social Work",d:"Child protection systems, foster care, family intervention and statutory obligations"},
+    {t:"Mental Health Social Work",d:"Assessment, care planning, therapeutic interventions and multi-disciplinary mental health work"},
+    {t:"Research Methods in Social Work",d:"Qualitative, quantitative and participatory action research for social work practice"},
+    {t:"Social Work Ethics & Human Rights",d:"Professional values, rights-based practice, ethical dilemmas and accountability frameworks"},
+    {t:"Supervised Field Placement",d:"400-hour supervised direct practice in an approved social work agency with reflective learning"},
+  ],
+  "med":[
+    {t:"Curriculum Theory & Design",d:"Curriculum models, planning frameworks, assessment integration and subject design"},
+    {t:"Educational Psychology & Learning Theories",d:"Cognitive, behaviourist and constructivist theories, motivation and classroom applications"},
+    {t:"Research Methods in Education",d:"Quantitative, qualitative and mixed methods approaches to educational research"},
+    {t:"Education Policy, Systems & Governance",d:"Policy analysis, education reform, school accountability and governance structures"},
+    {t:"Leadership & Management in Educational Settings",d:"Instructional leadership, distributed leadership and school improvement strategies"},
+    {t:"Inclusive Education & Diversity",d:"Special educational needs, differentiated instruction and equitable learning environments"},
+    {t:"Assessment & Evaluation in Education",d:"Formative and summative assessment design, grading systems and feedback strategies"},
+    {t:"Digital Pedagogy & Educational Technology",d:"EdTech integration, blended learning design, digital literacy and online pedagogy"},
+  ],
+  "mme":[
+    {t:"Theories of Change & Evaluation Frameworks",d:"Logic models, results chains, evaluation typologies and theory-based evaluation"},
+    {t:"Results-Based Management",d:"RBM frameworks, performance indicators, targets, baselines and accountability reporting"},
+    {t:"Quantitative Methods for M&E",d:"Survey design, sampling, SPSS/Stata, statistical analysis and quantitative reporting"},
+    {t:"Qualitative Methods for M&E",d:"Focus groups, key informant interviews, observation and participatory inquiry methods"},
+    {t:"Data Management, Tools & Visualisation",d:"ODK, KoBoToolbox, Power BI, Tableau and digital data management systems"},
+    {t:"Participatory & Utilisation-Focused Evaluation",d:"Stakeholder-led evaluation approaches and designing for evidence use and learning"},
+    {t:"M&E for Development Programmes",d:"Donor log frames, project cycle management, mid-term reviews and end-line evaluations"},
+    {t:"Research Methods & Dissertation in M&E",d:"Advanced research design and independent dissertation in monitoring and evaluation"},
+  ],
+  "mdevstudies":[
+    {t:"Theories of Development",d:"Classical, post-colonial, capability and alternative development paradigms and critiques"},
+    {t:"Poverty, Inequality & Social Justice",d:"Measuring and analysing multidimensional poverty, exclusion and inequality globally"},
+    {t:"International Development Finance & Aid",d:"ODA flows, multilateral aid architecture, conditionality, debt and development finance"},
+    {t:"Gender & Development",d:"Feminist theory, gender mainstreaming, women's empowerment and gender-responsive programming"},
+    {t:"Governance, Institutions & Development",d:"State capacity, corruption, institutional reform and the politics of development"},
+    {t:"Environmental Sustainability & Development",d:"Climate change, ecology, sustainable livelihoods and green development pathways"},
+    {t:"Research Methods in Development Studies",d:"Mixed methods, participatory and critical research approaches in development contexts"},
+    {t:"Policy Analysis & Advocacy",d:"Policy process, stakeholder analysis, policy briefs and advocacy strategy design"},
+  ],
+  "mir":[
+    {t:"International Relations Theory",d:"Realism, liberalism, constructivism, critical theory and post-colonial IR perspectives"},
+    {t:"Global Political Economy",d:"Trade regimes, global finance, power asymmetries and the world economic order"},
+    {t:"Foreign Policy Analysis",d:"Decision-making frameworks, bureaucratic politics and foreign policy case studies"},
+    {t:"International Security & Conflict Studies",d:"War, terrorism, peacekeeping, arms control and conflict resolution mechanisms"},
+    {t:"International Organisations & Multilateral Diplomacy",d:"UN system, regional bodies, treaty negotiations and multilateral governance"},
+    {t:"Human Rights & International Law",d:"Human rights treaties, international courts, compliance and enforcement mechanisms"},
+    {t:"Regional Studies in Global Perspective",d:"Area studies across Africa, Asia, the Americas and Europe in comparative context"},
+    {t:"Research Methods in International Relations",d:"Research design, data sources and academic writing for international relations"},
+  ],
+  "mgpp":[
+    {t:"Public Policy Analysis & Design",d:"Policy cycle, instruments, problem structuring and comparative policy approaches"},
+    {t:"Governance Theories & Institutions",d:"Democratic governance, accountability, rule of law and institutional design frameworks"},
+    {t:"Public Financial Management",d:"Budgeting systems, procurement integrity, fiscal transparency and accountability"},
+    {t:"Regulatory Policy & Implementation",d:"Regulation design, enforcement mechanisms, regulatory impact assessment and reform"},
+    {t:"Political Economy of Reform",d:"Power, interests, veto players and the political dynamics of public sector reform"},
+    {t:"Decentralisation & Local Governance",d:"Fiscal federalism, subnational governance, local service delivery and accountability"},
+    {t:"Policy Evaluation & Evidence-Based Practice",d:"Evaluation methods, impact assessment and using evidence to improve policy outcomes"},
+    {t:"Research Methods in Governance & Policy",d:"Research design, policy analysis methods and dissertation in governance and public policy"},
+  ],
+  "mda":[
+    {t:"Statistical Foundations for Analytics",d:"Probability theory, regression analysis, hypothesis testing and statistical inference"},
+    {t:"Machine Learning & Predictive Modelling",d:"Supervised, unsupervised and ensemble learning algorithms and model evaluation"},
+    {t:"Data Visualisation & Storytelling",d:"Tableau, Power BI, D3.js and principles of effective visual data communication"},
+    {t:"Big Data Technologies & Infrastructure",d:"Hadoop, Spark, cloud platforms, NoSQL databases and scalable data architectures"},
+    {t:"Business Intelligence & Decision Support Systems",d:"Data warehousing, OLAP, dashboards and BI strategy for organisational decisions"},
+    {t:"Python & R for Data Science",d:"Programming for data manipulation, analysis, automation and machine learning pipelines"},
+    {t:"Ethics, Fairness & Legal Aspects of Data",d:"GDPR, data privacy, algorithmic bias, responsible AI and data governance"},
+    {t:"Research Methods & Analytics Capstone",d:"Applied analytics dissertation solving a real business problem using data science"},
+  ],
+  "mscm":[
+    {t:"Supply Chain Strategy & Network Design",d:"Value chain analysis, global network design, outsourcing decisions and integration"},
+    {t:"Procurement & Strategic Sourcing",d:"Supplier selection, tendering, contracting, spend analytics and category management"},
+    {t:"Logistics & Distribution Management",d:"Transport modes, freight management, warehousing and last-mile delivery strategies"},
+    {t:"Inventory Optimisation & Demand Management",d:"Demand forecasting, EOQ models, safety stock and inventory performance metrics"},
+    {t:"Supply Chain Risk & Resilience",d:"Disruption analysis, risk mapping, business continuity and supply chain recovery"},
+    {t:"Sustainable & Green Supply Chains",d:"Environmental impact, circular economy principles and ESG in supply chain management"},
+    {t:"Digital Supply Chain & Industry 4.0",d:"IoT, blockchain, AI, autonomous systems and digital transformation in supply chains"},
+    {t:"Research Methods in Supply Chain Management",d:"Research design, case study methods and dissertation preparation in SCM"},
+  ],
+  "menvm":[
+    {t:"Environmental Policy & International Law",d:"MEAs, national legislation, compliance frameworks and environmental governance"},
+    {t:"Environmental Impact Assessment",d:"EIA frameworks, screening, scoping, review procedures and stakeholder engagement"},
+    {t:"Climate Change: Mitigation & Adaptation",d:"Carbon management, climate finance instruments, NDCs and adaptation planning"},
+    {t:"Natural Resource Management",d:"Biodiversity, forests, water and land governance for sustainability"},
+    {t:"Environmental Economics & Ecosystem Valuation",d:"Cost-benefit analysis, total economic value and payments for ecosystem services"},
+    {t:"Environmental Monitoring, Auditing & Reporting",d:"Data collection methods, environmental audits, reporting standards and ISO 14001"},
+    {t:"Sustainability Management in Organisations",d:"Corporate sustainability strategy, ESG reporting, GRI framework and green management"},
+    {t:"Research Methods in Environmental Management",d:"Mixed methods environmental research design and dissertation preparation"},
+  ],
+  "mlod":[
+    {t:"Leadership Theory & Adaptive Practice",d:"Transformational, servant, adaptive and distributed leadership models and their application"},
+    {t:"Organisational Development & Change",d:"OD frameworks, Kotter and Lewin change models, and managing complex transformation"},
+    {t:"Coaching & Mentoring in Organisations",d:"Coaching skills, GROW model, mentoring frameworks and leadership development culture"},
+    {t:"Strategic HR & Talent Management",d:"People strategy, succession planning, high-potential development and retention"},
+    {t:"Culture, Values & Organisational Effectiveness",d:"Diagnosing organisational culture, values-based leadership and culture change"},
+    {t:"Leading Through Crisis & Complexity",d:"Adaptive leadership, resilience building, crisis communication and decision-making"},
+    {t:"Ethics, Governance & Corporate Responsibility",d:"Ethical leadership, stakeholder accountability, ESG and responsible governance"},
+    {t:"Research Methods in Leadership & OD",d:"Research design and dissertation for organisational and leadership studies"},
+  ],
+  "meim":[
+    {t:"Entrepreneurial Mindset & Opportunity Recognition",d:"Creativity, entrepreneurial cognition, opportunity evaluation and ideation methods"},
+    {t:"Innovation Management & New Product Development",d:"Innovation process, R&D management, open innovation and product lifecycle management"},
+    {t:"Business Planning & Startup Finance",d:"Business model canvas, financial projections, valuation and startup funding strategies"},
+    {t:"Venture Capital & Startup Ecosystems",d:"VC process, angel investing, accelerators, incubators and startup network dynamics"},
+    {t:"Design Thinking & User-Centred Innovation",d:"Empathy mapping, prototyping, testing and iterative design for innovation"},
+    {t:"Digital Entrepreneurship & Platform Business Models",d:"Digital business models, platform economics, network effects and digital scaling"},
+    {t:"Social Entrepreneurship & Impact Measurement",d:"Social enterprise models, theory of change, SROI and measuring social value"},
+    {t:"Research Methods in Entrepreneurship",d:"Entrepreneurship research design, methodology and dissertation preparation"},
+  ],
+  "mgh":[
+    {t:"Global Health Architecture & Systems",d:"WHO, GFATM, Gavi, bilateral donors and the global health governance landscape"},
+    {t:"Health Policy Analysis & Reform",d:"Policy cycle, reform strategies, stakeholder analysis and implementation science"},
+    {t:"Disease Epidemiology & Burden of Disease",d:"Communicable and non-communicable disease metrics, DALYs, GBD and priority setting"},
+    {t:"Health Financing & Universal Health Coverage",d:"Health financing mechanisms, insurance models, UHC pathways and equity implications"},
+    {t:"Global Health Governance & Diplomacy",d:"Health treaty negotiations, international health regulations and health diplomacy"},
+    {t:"Gender, Equity & Social Determinants of Health",d:"Addressing systemic inequities and structural determinants of global health outcomes"},
+    {t:"Digital Health & Health Innovation",d:"mHealth, telemedicine, AI in health, health technology assessment and innovation"},
+    {t:"Research Methods in Global Health",d:"Research design, ethics and dissertation in global health and health policy"},
+  ],
+  "mthm":[
+    {t:"Strategic Tourism Management",d:"Tourism planning, policy analysis, destination competitiveness and market positioning"},
+    {t:"Hospitality Operations & Service Excellence",d:"Rooms division, food & beverage management and delivering service quality"},
+    {t:"Tourism Economics & Market Analysis",d:"Tourism demand modelling, supply analysis, economic impacts and market research"},
+    {t:"Destination Management & Branding",d:"Destination management organisations, place branding and visitor experience design"},
+    {t:"Sustainable Tourism Development",d:"Ecotourism, community-based tourism, carrying capacity and responsible travel"},
+    {t:"Digital Tourism & e-Tourism Marketing",d:"OTA platforms, social media, digital distribution and online tourism marketing"},
+    {t:"Events, MICE & Experiential Management",d:"Event conceptualisation, logistics, sponsorship and meetings industry management"},
+    {t:"Research Methods in Tourism & Hospitality",d:"Research design, quantitative and qualitative methods and dissertation in tourism"},
+  ],
+  "mecon":[
+    {t:"Advanced Microeconomic Theory",d:"Consumer theory, producer theory, general equilibrium, game theory and welfare economics"},
+    {t:"Advanced Macroeconomic Theory",d:"Dynamic models, monetary economics, business cycle theory and open economy models"},
+    {t:"Econometrics & Empirical Methods",d:"OLS, IV, panel data, difference-in-differences, time-series estimation and causal inference"},
+    {t:"Development & Growth Economics",d:"Growth models, structural transformation, poverty traps and evidence from development"},
+    {t:"International Trade & Open Economy Finance",d:"Trade theory, comparative advantage, exchange rates and balance of payments"},
+    {t:"Public Economics & Fiscal Policy",d:"Optimal taxation, public expenditure, redistribution and political economy of fiscal policy"},
+    {t:"Applied Economic Analysis",d:"Economic consulting skills, policy memo writing and applied microeconomics methods"},
+    {t:"Research Methods & Economics Dissertation",d:"Advanced research design and independent dissertation in economics"},
+  ],
+  "murp":[
+    {t:"Urban Planning Theory & History",d:"Planning traditions, modernism, post-modernism and contemporary urbanism debates"},
+    {t:"Land Use, Zoning & Spatial Planning",d:"Land use regulation, zoning systems, spatial analysis and development management"},
+    {t:"Urban Housing, Infrastructure & Services",d:"Housing policy, infrastructure finance, urban utilities and service delivery"},
+    {t:"Transport Planning & Urban Mobility",d:"Transport demand, multimodal planning, transit-oriented development and smart mobility"},
+    {t:"Urban Economics & Real Estate",d:"Urban land markets, property valuation, development economics and real estate finance"},
+    {t:"GIS & Urban Data Analytics",d:"Spatial data, GIS tools, urban analytics and data-driven planning decisions"},
+    {t:"Climate Resilience & Urban Sustainability",d:"Green infrastructure, climate risk mapping, urban resilience and low-carbon cities"},
+    {t:"Research Methods & Professional Planning Project",d:"Research design and a professional planning inquiry or policy project"},
+  ],
+  "mel":[
+    {t:"Theories of Educational Leadership",d:"Transformational, instructional, distributed and systems leadership in education"},
+    {t:"School Improvement & Effectiveness Research",d:"Evidence-based approaches to raising learner achievement and school quality"},
+    {t:"Strategic Planning & Vision in Education",d:"Vision setting, strategic analysis, goal alignment and implementation planning"},
+    {t:"Education Finance & Resource Management",d:"School budgeting, funding allocation, resource optimisation and financial stewardship"},
+    {t:"Leading Change in Educational Institutions",d:"Change management, innovation, cultural transformation and stakeholder engagement"},
+    {t:"Community, Governance & Stakeholder Relations",d:"Parent partnerships, school boards, community engagement and governance roles"},
+    {t:"Policy Analysis for Educational Leaders",d:"Interpreting, critiquing and implementing education policy in leadership contexts"},
+    {t:"Research Methods in Educational Leadership",d:"Research design and leadership inquiry project for educational leaders"},
+  ],
+  "mhi":[
+    {t:"Health Information Systems & Architecture",d:"System design, interoperability standards, data flows and health IT ecosystems"},
+    {t:"Electronic Health Records & Clinical Data",d:"EHR implementation, HL7, FHIR, data quality and clinical documentation standards"},
+    {t:"Health Data Analytics & Mining",d:"Clinical data analysis, predictive modelling, pattern detection and data warehousing"},
+    {t:"Clinical Decision Support Systems",d:"CDSS design, evidence integration, alert systems and clinical workflow integration"},
+    {t:"Health Information Privacy, Security & Law",d:"HIPAA, data protection regulations, cybersecurity and health data legal frameworks"},
+    {t:"Telehealth, mHealth & Digital Health",d:"Remote patient monitoring, telemedicine, digital therapeutics and mHealth platforms"},
+    {t:"Implementing Health IT in Low-Resource Settings",d:"Context-adapted solutions, interoperability challenges and sustainability in LMICs"},
+    {t:"Research Methods in Health Informatics",d:"Research design and dissertation in health informatics and digital health"},
+  ],
+};
+
+/* ═══════════════════════════════════════════════
+   DEGREE PROGRAMMES — 4 YEARS × 9 MODULES = 36
+   ═══════════════════════════════════════════════ */
+const DEGREE_PROG_YEARS = {
+  "bba":[
+    {label:"Year 1 — Business Foundations",modules:["Business Communication & Academic Skills","Principles of Management","Introduction to Microeconomics","Introduction to Macroeconomics","Financial Accounting Principles","Business Mathematics & Statistics","Organisational Behaviour","Introduction to Marketing","Law for Business"]},
+    {label:"Year 2 — Core Business Disciplines",modules:["Managerial Accounting & Cost Analysis","Corporate Finance & Investment","Marketing Management","Human Resource Management","Operations & Process Management","Business Information Systems","Entrepreneurship & Innovation","Business Ethics & Corporate Social Responsibility","Quantitative Methods for Business"]},
+    {label:"Year 3 — Applied Business",modules:["Strategic Management","International Business","Supply Chain Management","Investment & Portfolio Analysis","Brand & Communications Management","Performance Management & Appraisal","Project Management","Business Law & Regulatory Environment","Industry Internship / Attachment"]},
+    {label:"Year 4 — Specialisation & Capstone",modules:["Advanced Strategic Management","Mergers, Acquisitions & Business Valuation","Digital Business & E-Commerce","Emerging Markets & Business Development","Leadership & Change Management","Sustainability in Business","Business Analytics & Decision Support","Capstone Business Research Project","Professional Development & Career Readiness"]},
+  ],
+  "bms":[
+    {label:"Year 1 — Management Foundations",modules:["Introduction to Management Theory","Principles of Economics","Business Communication & Presentation Skills","Quantitative Methods for Management","Accounting for Managers","Sociology of Organisations","Introduction to Organisational Psychology","Computer Applications in Management","Academic Writing & Critical Thinking"]},
+    {label:"Year 2 — Management Core",modules:["Organisational Behaviour & Motivation","Human Resource Management","Marketing Management","Financial Management","Operations & Quality Management","Management Information Systems","Entrepreneurship & SME Management","Business Law & Compliance","Research Methods in Management"]},
+    {label:"Year 3 — Applied Management",modules:["Strategic Management","Project Management & Execution","Change Management & Organisational Renewal","International Management & Cross-Cultural Practice","Managerial Decision Making","Talent Development & Coaching Skills","Corporate Governance & Accountability","Management Internship / Field Attachment","Elective — Leadership / Innovation / Digital Transformation"]},
+    {label:"Year 4 — Leadership & Capstone",modules:["Advanced Strategic Management","Leadership Development & Personal Effectiveness","Social Entrepreneurship & Impact","Business Analytics for Managers","Sustainability & Corporate Responsibility","Risk Management in Business","Negotiation & Conflict Resolution","Capstone Management Research Project","Career Development & Professional Readiness"]},
+  ],
+  "bfinance":[
+    {label:"Year 1 — Financial Foundations",modules:["Introduction to Financial Accounting","Principles of Microeconomics","Principles of Macroeconomics","Business Mathematics for Finance","Introduction to Corporate Finance","Law for Financial Professionals","Computer & Spreadsheet Applications in Finance","Academic & Research Skills","Principles of Management"]},
+    {label:"Year 2 — Core Finance",modules:["Financial Reporting & Analysis","Corporate Finance & Capital Markets","Financial Markets & Institutions","Investment Analysis & Portfolio Theory","Managerial Accounting","Statistics & Quantitative Methods for Finance","Taxation Principles","Financial Risk Management","Financial Modelling & Forecasting"]},
+    {label:"Year 3 — Applied Finance",modules:["Advanced Corporate Finance & Restructuring","Portfolio Management & Investment Strategy","Derivatives & Futures Markets","International Finance & Exchange Rates","Banking & Credit Analysis","Real Estate Finance","Behavioural Finance","Financial Regulations & Compliance","Finance Internship / Industry Attachment"]},
+    {label:"Year 4 — Specialisation & Capstone",modules:["Mergers & Acquisitions","Alternative Investments & Private Equity","Fintech & Digital Financial Services","Financial Planning & Wealth Management","Sustainable Finance & ESG Investing","Advanced Financial Modelling","Business Valuation & Due Diligence","Finance Research Capstone Project","Professional Ethics & Career Readiness in Finance"]},
+  ],
+  "baccounting":[
+    {label:"Year 1 — Accounting Foundations",modules:["Financial Accounting I","Business Mathematics & Statistics","Introduction to Economics","Business Communication","Law for Accountants","Introduction to Taxation","Information Technology for Accountants","Principles of Management","Academic Writing & Research Skills"]},
+    {label:"Year 2 — Core Accounting",modules:["Financial Accounting II — Intermediate Reporting","Management Accounting & Cost Systems","Auditing Principles & Practice","Corporate Taxation","Financial Statement Analysis","Business Finance","Quantitative Methods for Accountants","Ethics & Corporate Governance","Accounting Information Systems"]},
+    {label:"Year 3 — Advanced Accounting",modules:["Advanced Financial Reporting & IFRS","Advanced Auditing & Assurance","Advanced Taxation: Corporate & International","Public Sector Accounting & Reporting","Internal Controls & Fraud Prevention","Forensic Accounting & Investigation","Performance Management & Balanced Scorecard","Accounting Internship / Professional Attachment","Elective — ACCA/CIMA Pathway Module"]},
+    {label:"Year 4 — Professional & Capstone",modules:["Group Financial Statements & Consolidations","Strategic Management Accounting","Financial Risk Management","Advanced Corporate Governance","Sustainability Reporting & Integrated Reporting","Digital Accounting & Emerging Technologies","International Financial Management","Accounting Research Capstone Project","Professional Development & Examinations Preparation"]},
+  ],
+  "bmarketing":[
+    {label:"Year 1 — Marketing Foundations",modules:["Principles of Marketing","Introduction to Business & Management","Economics for Marketers","Business Communication & Writing","Introduction to Consumer Behaviour","Statistics for Marketing","Digital Literacy & Online Platforms","Sociology & Culture in Marketing","Academic Research Skills"]},
+    {label:"Year 2 — Marketing Core",modules:["Consumer Behaviour & Psychology","Marketing Research Methods","Brand Management Principles","Advertising & Promotional Strategy","Digital Marketing Fundamentals","Integrated Marketing Communications","Market Segmentation, Targeting & Positioning","Retail & Channel Management","Entrepreneurship & Marketing Innovation"]},
+    {label:"Year 3 — Applied Marketing",modules:["Strategic Marketing Management","Social Media Marketing & Influencer Strategy","Content Marketing & SEO","International Marketing","Marketing Analytics & Data Insights","Customer Experience & Service Design","Public Relations & Corporate Communications","Marketing Internship / Industry Placement","Elective — Event Marketing / B2B Marketing / Healthcare Marketing"]},
+    {label:"Year 4 — Specialisation & Capstone",modules:["Advanced Brand Strategy","Digital Advertising & Programmatic Buying","Customer Relationship Management","E-Commerce & Omnichannel Strategy","Marketing Ethics & Sustainability","Innovation in Marketing & New Product Launch","Emerging Markets & Global Marketing Campaigns","Marketing Research Capstone Project","Career Readiness & Professional Portfolio"]},
+  ],
+  "bhrm":[
+    {label:"Year 1 — HR Foundations",modules:["Introduction to Human Resource Management","Organisational Behaviour","Principles of Management","Business Communication","Introduction to Employment Law","Introduction to Economics","Sociology of Work & Organisations","Computer Applications in HR","Academic Writing & Research Skills"]},
+    {label:"Year 2 — Core HRM",modules:["Recruitment, Selection & Talent Acquisition","Learning & Development in Organisations","Performance Management Systems","Compensation & Benefits Design","Employee Relations & Labour Law","HR Information Systems & Analytics","Diversity & Inclusion Management","Organisational Psychology","Research Methods in HRM"]},
+    {label:"Year 3 — Applied HRM",modules:["Strategic Human Resource Management","Workforce Planning & Analytics","Training Design & Facilitation","Industrial Relations & Collective Bargaining","Change Management & Organisational Development","Coaching & Mentoring in the Workplace","HR Law & Compliance","HR Internship / Professional Attachment","Elective — Global HRM / HR Technology / Health & Wellbeing"]},
+    {label:"Year 4 — Leadership & Capstone",modules:["HR Strategy & Business Partnership","Leadership Development & Talent Management","Organisational Culture & Climate","HR Ethics & Corporate Governance","Reward Strategy & Executive Compensation","Future of Work & HR Innovation","International HRM","HRM Research Capstone Project","Professional Development & SHRM/CIPD Pathway Preparation"]},
+  ],
+  "bops":[
+    {label:"Year 1 — Operations Foundations",modules:["Introduction to Operations Management","Principles of Management","Business Mathematics & Statistics","Introduction to Economics","Accounting for Operations","Business Communication","Information Technology in Operations","Introduction to Supply Chain","Academic & Research Skills"]},
+    {label:"Year 2 — Core Operations",modules:["Process Analysis & Design","Quality Management & Control","Inventory & Materials Management","Production Planning & Scheduling","Lean Management & Waste Elimination","Operations Research & Quantitative Methods","Procurement & Supplier Management","Logistics & Distribution","Service Operations Management"]},
+    {label:"Year 3 — Applied Operations",modules:["Strategic Operations Management","Six Sigma & Continuous Improvement","Project Management for Operations","Operations Risk Management","Supply Chain Analytics","ERP Systems & Digital Operations","Sustainable Operations & Green Management","Operations Internship / Industry Attachment","Elective — Healthcare Operations / Manufacturing / Retail Operations"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Global Operations & Multinational Supply Chains","Advanced Supply Chain Strategy","Industry 4.0 & Automation in Operations","Operations Innovation & Technology","Business Analytics for Operational Decision Making","Operations Capstone Project","Organisational Leadership & Change","Professional Development & Career Readiness","Elective — Humanitarian Logistics / Agri-Supply Chain"]},
+  ],
+  "bib":[
+    {label:"Year 1 — Global Business Foundations",modules:["Introduction to International Business","World Economics & Trade Systems","Global Geography & Cultural Studies","Business Communication & Cross-Cultural Competence","Principles of Management","Financial Accounting Basics","Introduction to Marketing","Computer Applications in Business","Academic Research & Writing"]},
+    {label:"Year 2 — Core International Business",modules:["International Trade Theory & Policy","Foreign Direct Investment & Multinational Enterprises","Cross-Cultural Management","International Marketing Strategy","Global Financial Markets","International Business Law & Regulations","Export-Import Management & Trade Finance","Global Supply Chain Management","Research Methods in International Business"]},
+    {label:"Year 3 — Applied International Business",modules:["Emerging Market Strategies","International Human Resource Management","Global Corporate Strategy","International Negotiations & Diplomacy","Regional Business Environments — Africa, Asia, Europe, Americas","International Project Management","Currency & Risk Management in Global Business","International Business Internship / Study Abroad","Elective — International Trade Logistics / Global Innovation"]},
+    {label:"Year 4 — Leadership & Capstone",modules:["Globalisation, Geopolitics & Business","Sustainability in International Business","Digital Business in a Global Economy","International Entrepreneurship & Startups","Corporate Social Responsibility Across Borders","Mergers, Acquisitions & Cross-Border Deals","Advanced Global Marketing","International Business Capstone Research Project","Professional Development & Career Readiness"]},
+  ],
+  "bentrepreneurship":[
+    {label:"Year 1 — Entrepreneurial Foundations",modules:["Introduction to Entrepreneurship","Creative Thinking & Opportunity Recognition","Principles of Business & Management","Financial Literacy for Entrepreneurs","Introduction to Marketing for Startups","Communication & Presentation Skills","Technology & Digital Tools for Business","Introduction to Economics","Academic Writing & Research Skills"]},
+    {label:"Year 2 — Building Ventures",modules:["Business Model Innovation","Market Research & Customer Discovery","Financial Planning & Startup Accounting","Digital Marketing & Social Media for Startups","Legal Structures, IP & Business Registration","Product Development & Prototyping","Pitching, Storytelling & Persuasion","Human Resources in Small Business","Research Methods in Entrepreneurship"]},
+    {label:"Year 3 — Growing Enterprises",modules:["Entrepreneurial Strategy & Competitive Dynamics","Scaling Business Operations","Sales Management & Revenue Growth","Venture Finance & Fundraising","Lean Startup & Agile Business Development","Social & Impact Entrepreneurship","Family Business & SME Management","Entrepreneurship Field Attachment / Startup Lab","Elective — Agribusiness / Tech Entrepreneurship / Creative Industries"]},
+    {label:"Year 4 — Leadership & Capstone",modules:["Corporate Entrepreneurship & Innovation","Global Entrepreneurship & Export Markets","Advanced Business Finance & Investment","Entrepreneurial Leadership & Team Building","Ethics, Sustainability & Responsible Business","Emerging Technologies & Disruption","Franchise & Licensing Models","Entrepreneurship Capstone Business Project","Professional Development & Investor Readiness"]},
+  ],
+  "becon":[
+    {label:"Year 1 — Economics Foundations",modules:["Principles of Microeconomics","Principles of Macroeconomics","Mathematics for Economics","Statistics for Economists","Introduction to Business & Management","Accounting Principles","Economic History & Thought","Academic Writing & Research Skills","Introduction to Political Economy"]},
+    {label:"Year 2 — Intermediate Economics",modules:["Intermediate Microeconomics","Intermediate Macroeconomics","Econometrics I — Introduction to Regression","Public Economics & Government Finance","Labour Economics","International Trade Theory","Money, Banking & Financial Markets","Development Economics","Research Design & Methods in Economics"]},
+    {label:"Year 3 — Applied Economics",modules:["Applied Econometrics & Data Analysis","Industrial Organisation & Competition Policy","Environmental & Resource Economics","Health Economics","Urban & Regional Economics","Behavioural Economics","Agricultural & Rural Economics","Economics Internship / Policy Attachment","Elective — Financial Economics / Gender & Economics"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Advanced Microeconomic Theory","Advanced Macroeconomic Theory","Econometrics II — Advanced Methods","Economic Policy Analysis & Evaluation","International Finance & Open Economy Macroeconomics","Game Theory & Strategic Behaviour","Poverty, Inequality & Social Policy","Economics Research Capstone Project","Professional Development & Graduate Study Preparation"]},
+  ],
+  "bph":[
+    {label:"Year 1 — Public Health Foundations",modules:["Introduction to Public Health","Human Biology & Anatomy Basics","Principles of Epidemiology","Health & Society","Introduction to Health Systems","Statistics for Public Health","Environmental Health Basics","Health Communication & Literacy","Academic Writing & Research Skills"]},
+    {label:"Year 2 — Core Public Health Sciences",modules:["Intermediate Epidemiology & Disease Surveillance","Biostatistics & Data Analysis","Health Behaviour & Promotion","Social Determinants of Health","Environmental & Occupational Health","Nutrition & Public Health","Maternal, Child & Adolescent Health","Health Policy & Systems","Research Methods in Public Health"]},
+    {label:"Year 3 — Applied Public Health",modules:["Global Health Challenges & Disease Control","Health Programme Planning & Evaluation","Community Health & Primary Care","Sexual & Reproductive Health","Mental Health in Public Health","Non-Communicable Disease Prevention","Health Economics & Resource Allocation","Public Health Practicum / Field Placement","Elective — One Health / Emergency Preparedness / Health Education"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Health Systems Strengthening","Health Policy Analysis & Advocacy","Infectious Disease Control & Outbreak Response","Leadership & Management in Public Health","Digital Health & eHealth Applications","Humanitarian & Emergency Public Health","Monitoring & Evaluation in Health Programmes","Public Health Research Capstone Project","Professional Development & Career Readiness"]},
+  ],
+  "bnursing":[
+    {label:"Year 1 — Nursing Foundations",modules:["Anatomy & Physiology","Introduction to Nursing Practice","Fundamentals of Nursing Care","Health Assessment & Clinical Observation","Professional Ethics & Nursing Values","Health Communication & Patient Education","Microbiology & Infection Control","Pharmacology Basics","Academic Writing & Research Skills in Nursing"]},
+    {label:"Year 2 — Core Clinical Nursing",modules:["Medical-Surgical Nursing I","Maternal & Child Health Nursing","Mental Health Nursing","Nutrition & Dietary Care","Pathophysiology for Nurses","Advanced Pharmacology & Medication Management","Community & Primary Health Care Nursing","Nursing Informatics & Documentation","Research Methods in Nursing"]},
+    {label:"Year 3 — Specialised Clinical Practice",modules:["Medical-Surgical Nursing II","Paediatric Nursing","Critical Care & Emergency Nursing","Gerontological Nursing","HIV/AIDS & Infectious Disease Nursing","Perioperative Nursing","Nursing Leadership & Ward Management","Clinical Practicum / Hospital Attachment","Elective — Oncology / Orthopaedic / Palliative Care Nursing"]},
+    {label:"Year 4 — Advanced Nursing & Capstone",modules:["Advanced Nursing Practice & Clinical Decision Making","Nursing Administration & Health Systems","Health Policy & Advocacy for Nurses","Evidence-Based Nursing Practice","Public & Community Health Nursing Advanced","Reproductive Health & Midwifery Concepts","Health Promotion & Chronic Disease Management","Nursing Research Capstone Project","Professional Development & Registration Readiness"]},
+  ],
+  "bha":[
+    {label:"Year 1 — Health Administration Foundations",modules:["Introduction to Health Administration","Human Biology & Health Concepts","Principles of Management","Health Communication","Introduction to Health Systems","Accounting & Financial Literacy","Statistics for Health Administrators","Law & Ethics in Healthcare","Academic Writing & Research Skills"]},
+    {label:"Year 2 — Core Health Administration",modules:["Health Policy & Systems Analysis","Healthcare Finance & Budgeting","Human Resource Management in Health","Health Information Systems","Quality Improvement & Patient Safety","Organisational Behaviour in Health Settings","Healthcare Marketing","Health Economics","Research Methods in Health Administration"]},
+    {label:"Year 3 — Applied Health Administration",modules:["Strategic Planning in Healthcare","Healthcare Procurement & Supply Chain","Health Regulations & Accreditation","Project Management in Health","Community Health Programmes Management","Health Insurance & Risk Management","Leadership in Health Organisations","Health Administration Internship","Elective — Hospital Management / Public Sector Health / NGO Health Management"]},
+    {label:"Year 4 — Leadership & Capstone",modules:["Advanced Health Systems Leadership","Digital Health & Hospital Information Systems","Health Policy Advocacy & Reform","Disaster & Emergency Health Management","Monitoring & Evaluation in Health Programmes","Sustainability in Health Organisations","International Health Systems Comparison","Health Administration Capstone Research Project","Professional Development & Career Readiness"]},
+  ],
+  "bsw":[
+    {label:"Year 1 — Social Work Foundations",modules:["Introduction to Social Work","Human Growth & Development","Sociology & Social Policy","Introduction to Psychology","Communication Skills in Social Work","Social Welfare & Social Justice","Ethics in Social Work Practice","Quantitative & Qualitative Research Basics","Academic Writing & Critical Thinking"]},
+    {label:"Year 2 — Core Social Work Practice",modules:["Social Work Theory & Practice Models","Child & Family Social Work","Community Development & Practice","Mental Health Social Work","Social Work Law & Statutory Practice","Assessment, Planning & Intervention","Poverty, Exclusion & Vulnerability","Research Methods in Social Work","Group Work & Facilitation Skills"]},
+    {label:"Year 3 — Specialised Practice",modules:["Child Protection & Safeguarding","Older Adults & Disability Social Work","Substance Abuse & Addiction Social Work","Gender, Violence & Social Work","Refugee & Migration Social Work","School Social Work","NGO & Non-Profit Management","Supervised Field Practicum I","Elective — Indigenous Social Work / Social Entrepreneurship"]},
+    {label:"Year 4 — Advanced Practice & Capstone",modules:["Advanced Social Work Practice","Leadership & Management in Social Services","Social Policy Analysis & Advocacy","Programme Design, Monitoring & Evaluation","Digital Social Work & Technology","Human Rights & International Social Work","Supervised Field Practicum II","Social Work Research Capstone Project","Professional Development & Registration Preparation"]},
+  ],
+  "bsociology":[
+    {label:"Year 1 — Sociological Foundations",modules:["Introduction to Sociology","Social Theory: Classical Perspectives","Research Methods in Sociology I","Social Psychology","Anthropology & Culture","Introduction to Political Science","Statistics for Social Scientists","Sociology of Education","Academic Writing & Critical Thinking"]},
+    {label:"Year 2 — Core Sociology",modules:["Contemporary Social Theory","Sociology of Race, Ethnicity & Identity","Gender & Feminist Sociology","Social Stratification & Inequality","Sociology of Family & Kinship","Sociology of Health & Illness","Urban & Rural Sociology","Research Methods in Sociology II — Qualitative","Deviance, Crime & Social Control"]},
+    {label:"Year 3 — Applied Sociology",modules:["Political Sociology & Social Movements","Sociology of Work & Organisations","Religion, Culture & Society","Media, Communication & Society","Environmental Sociology","Globalisation & Social Change","Sociology of Development","Community Research Attachment","Elective — Sociology of Religion / Youth Studies / Migration & Diaspora"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Advanced Social Theory","Sociology of Power & Institutions","Social Policy Analysis & Social Justice","Sociology of Technology & Digital Life","Intersectionality & Social Research","Applied Sociological Research","Gender, Development & Policy","Sociology Capstone Research Project","Professional Development & Graduate Study Preparation"]},
+  ],
+  "bpsychology":[
+    {label:"Year 1 — Psychology Foundations",modules:["Introduction to Psychology","Biological Bases of Behaviour","Developmental Psychology","Research Methods in Psychology I","Social Psychology","Cognitive Psychology & Learning","Statistics for Psychology","History & Philosophy of Psychology","Academic Writing & Critical Thinking"]},
+    {label:"Year 2 — Core Psychology",modules:["Personality Theories","Abnormal Psychology & Psychopathology","Research Methods II — Experimental Design","Sensation, Perception & Consciousness","Motivation & Emotion","Educational & School Psychology","Industrial & Organisational Psychology","Health Psychology","Cross-Cultural Psychology"]},
+    {label:"Year 3 — Applied Psychology",modules:["Clinical Psychology Principles","Counselling Skills & Therapeutic Approaches","Neuropsychology","Child & Adolescent Psychology","Forensic Psychology","Psychological Assessment & Testing","Community Psychology","Psychology Practicum / Field Placement","Elective — Sports Psychology / Positive Psychology / Trauma & Resilience"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Advanced Abnormal Psychology","Psychotherapy Models & Evidence Base","Stress, Coping & Resilience","Psychological Research & Ethics","Neuropsychology & Brain-Behaviour","Human Sexuality & Relationship Psychology","Psychology of Leadership & Organisations","Psychology Research Capstone Project","Professional Development & Registration Preparation"]},
+  ],
+  "bed":[
+    {label:"Year 1 — Education Foundations",modules:["Introduction to Education & Teaching","Educational Psychology","Sociology of Education","Curriculum Studies I","Communication Skills for Teachers","Philosophy of Education","Introduction to Inclusive Education","Academic Writing & Research Skills","Introduction to Information Technology in Education"]},
+    {label:"Year 2 — Teaching & Learning",modules:["Curriculum Studies II — Subject Specialisation","Learning Theories & Instructional Design","Assessment & Evaluation in Learning","Classroom Management & Discipline","Teaching Methodology I — Primary / Secondary","Educational Technology & e-Learning","Child Development & Psychology","Diversity & Special Educational Needs","Research Methods in Education"]},
+    {label:"Year 3 — Classroom Practice",modules:["Teaching Methodology II — Advanced Pedagogy","Subject Specialisation — Major Teaching Subject","Guidance & Counselling in Schools","School Leadership & Community Engagement","Curriculum Innovation & Reform","Teaching Practicum I — Schools Attachment","Health & Physical Education","Language in Education & Bilingual Teaching","Elective — STEM Education / ECD / Adult Literacy"]},
+    {label:"Year 4 — Professional Teaching & Capstone",modules:["Advanced Curriculum Design & Development","Education Policy & School Governance","Teaching Practicum II — Extended School Experience","Educational Leadership & Administration","Inclusive & Special Education Advanced","Digital Pedagogy & 21st Century Teaching","Monitoring Learning Outcomes","Education Research Capstone Project","Professional Development & Teaching Registration"]},
+  ],
+  "bpolitics":[
+    {label:"Year 1 — Political Science Foundations",modules:["Introduction to Political Science","Political Theory & Ideologies","Introduction to Comparative Politics","History of Political Thought","Introduction to International Relations","Research Methods in Political Science I","Introduction to Law & Political Systems","Sociology & Politics","Academic Writing & Critical Thinking"]},
+    {label:"Year 2 — Core Political Science",modules:["Comparative Government & Politics","Political Economy","International Relations Theory","Democratic Theory & Practice","African Politics & Governance","Public Policy & Administration","Political Parties & Electoral Systems","Constitutional Law & Rights","Research Methods II — Qualitative & Quantitative"]},
+    {label:"Year 3 — Applied Political Studies",modules:["Security Studies & Conflict Resolution","Foreign Policy Analysis","Political Sociology & Social Movements","Public Administration & Bureaucracy","Development Politics & Aid","Human Rights Law & Advocacy","Media & Political Communication","Political Science Internship / Policy Attachment","Elective — Gender & Politics / Environmental Politics / Religion & Politics"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Advanced International Relations","Geopolitics & Global Order","African Union & Regional Integration","Political Leadership & Ethics","Governance, Corruption & Accountability","Political Economy of Development","Digital Politics & Democracy","Political Science Research Capstone Project","Professional Development & Graduate Study Preparation"]},
+  ],
+  "benviro":[
+    {label:"Year 1 — Environmental Foundations",modules:["Introduction to Environmental Studies","Earth Sciences & Ecology","Environmental Chemistry","Introduction to Biology","Environmental History & Philosophy","Research Methods in Environmental Studies I","Statistics & Data Analysis","Climate Science Basics","Academic Writing & Research Skills"]},
+    {label:"Year 2 — Core Environmental Studies",modules:["Environmental Policy & Law","Ecology & Biodiversity Conservation","Water Resources & Management","Soil Science & Land Management","Environmental Impact Assessment Principles","Renewable Energy & Climate Solutions","Human Geography & Environment","Research Methods II — Fieldwork & GIS","Environmental Economics"]},
+    {label:"Year 3 — Applied Environmental Studies",modules:["Climate Change Adaptation & Mitigation","Environmental Monitoring & Auditing","Forest & Wildlife Management","Marine & Freshwater Ecology","Urban Environmental Management","Environmental Health & Toxicology","Community-Based Natural Resource Management","Environmental Fieldwork / Internship","Elective — Environmental Education / One Health / Agroecology"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Environmental Governance & International Agreements","Sustainable Development & Green Economy","Corporate Sustainability & ESG Reporting","Disaster Risk Reduction & Resilience","Environmental Communication & Advocacy","Geographic Information Systems (GIS) Advanced","Environmental Policy Analysis","Environmental Research Capstone Project","Professional Development & Career Readiness"]},
+  ],
+  "bscm":[
+    {label:"Year 1 — Logistics & SCM Foundations",modules:["Introduction to Supply Chain Management","Principles of Logistics & Transportation","Business Mathematics & Statistics","Introduction to Economics","Principles of Management","Financial Accounting Basics","Business Communication","Computer Applications in SCM","Academic Writing & Research Skills"]},
+    {label:"Year 2 — Core Supply Chain",modules:["Procurement & Purchasing Management","Inventory Management & Control","Warehousing & Distribution Centre Management","Transportation & Freight Management","Supply Chain Finance & Costing","Operations Management","Trade Finance & International Logistics","Research Methods in Supply Chain","Supplier Relationship Management"]},
+    {label:"Year 3 — Applied Logistics & SCM",modules:["Strategic Supply Chain Management","Port & Customs Operations","Cold Chain & Perishables Logistics","Humanitarian Logistics & Aid Supply Chains","Supply Chain Analytics & Data Tools","ERP Systems in Supply Chain","Supply Chain Risk Management","SCM Internship / Industry Attachment","Elective — Agri-Logistics / Retail Supply Chain / Healthcare SCM"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Global Supply Chain Strategy","Digital Supply Chain & Industry 4.0","Sustainable & Circular Supply Chains","Advanced Procurement & Contract Management","Supply Chain Leadership & Ethics","E-Commerce & Last-Mile Delivery","International Trade Regulations & Compliance","SCM Research Capstone Project","Professional Development & Career Readiness"]},
+  ],
+  "bthm":[
+    {label:"Year 1 — Tourism & Hospitality Foundations",modules:["Introduction to Tourism & Hospitality","Principles of Hotel Operations","Food & Beverage Management I","Customer Service & Guest Relations","Introduction to Business Management","Tourism Geography","Business Communication","Computer Applications in Tourism","Academic Writing & Research Skills"]},
+    {label:"Year 2 — Core Tourism & Hospitality",modules:["Hospitality Marketing & Sales","Accommodation & Rooms Division Management","Food & Beverage Management II","Tourism Economics & Statistics","Event Planning & Management","Tourism Policy & Planning","Cross-Cultural Communication & Service","Hospitality Accounting & Financial Control","Research Methods in Tourism & Hospitality"]},
+    {label:"Year 3 — Applied Tourism & Hospitality",modules:["Strategic Tourism Management","Destination Management & Branding","Sustainable Tourism Development","Digital Marketing for Tourism","Hotel Revenue Management & Pricing","MICE & Business Events Management","Tourism Entrepreneurship","Hospitality Industry Internship","Elective — Ecotourism / Heritage Tourism / Cruise & Aviation Tourism"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Advanced Hospitality Operations","Global Tourism Trends & Forecasting","Tourism Crisis Management & Resilience","Leadership in Hospitality Organisations","Tourism Policy Analysis & Advocacy","Innovation in Tourism & Hospitality","Cultural Tourism & Heritage Management","Tourism & Hospitality Research Capstone Project","Professional Development & Career Readiness"]},
+  ],
+  "bism":[
+    {label:"Year 1 — Information Systems Foundations",modules:["Introduction to Information Systems","Computer Hardware & Software Fundamentals","Principles of Programming","Business Mathematics & Statistics","Introduction to Management","Networking & Internet Technologies","Database Fundamentals","Business Communication & IT Documentation","Academic Writing & Research Skills"]},
+    {label:"Year 2 — Core Information Systems",modules:["Systems Analysis & Design","Database Design & Management","Business Applications Development","Management Information Systems","IT Project Management","Cybersecurity Fundamentals","Cloud Computing & Virtualisation","Business Intelligence & Reporting","Research Methods in Information Systems"]},
+    {label:"Year 3 — Applied IS Management",modules:["Enterprise Resource Planning (ERP) Systems","IT Governance & Compliance","E-Commerce & Digital Platforms","Software Quality Assurance & Testing","Network Administration & Security","Information Systems Audit","IT Consulting & Service Management","IS Industry Internship / Attachment","Elective — Mobile App Development / Health Informatics / E-Government"]},
+    {label:"Year 4 — Leadership & Capstone",modules:["IT Strategy & Digital Transformation","Artificial Intelligence & Machine Learning Concepts","Data Science for Business Decisions","Blockchain & Emerging Technologies","IT Ethics, Privacy & Data Protection","Change Management in IT Implementations","Advanced Database & Big Data Systems","IS Research Capstone Project","Professional Development & Career Readiness"]},
+  ],
+  "bds":[
+    {label:"Year 1 — Data Science Foundations",modules:["Introduction to Data Science","Python Programming for Data Analysis","Mathematics for Data Science","Statistics & Probability","Introduction to Databases & SQL","Introduction to Machine Learning Concepts","Business & Organisational Context","Data Ethics & Privacy","Academic Writing & Research Skills"]},
+    {label:"Year 2 — Core Data Science",modules:["Data Wrangling & Preprocessing","Statistical Modelling & Inference","Machine Learning I — Supervised Learning","Data Visualisation & Dashboarding","Database Management & NoSQL","Mathematics for Machine Learning","Business Analytics & Decision Making","Web Scraping & APIs","Research Methods in Data Science"]},
+    {label:"Year 3 — Applied Data Science",modules:["Machine Learning II — Unsupervised & Deep Learning","Natural Language Processing","Big Data Technologies — Spark & Hadoop","Time Series Analysis & Forecasting","Recommender Systems","Cloud Platforms for Data Science","Domain Application — Health / Finance / Marketing Analytics","Data Science Internship / Industry Attachment","Elective — Computer Vision / Reinforcement Learning / Geospatial Analysis"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Advanced Machine Learning & AI","Explainable AI & Model Interpretability","MLOps & Model Deployment","Data Governance & Quality Management","Ethical AI & Responsible Data Science","Business Strategy & Data-Driven Leadership","Data Science Innovation & Entrepreneurship","Data Science Research Capstone Project","Professional Development & Career Readiness"]},
+  ],
+  "bgh":[
+    {label:"Year 1 — Global Health Foundations",modules:["Introduction to Global Health","World Health Systems","Human Biology & Disease Basics","Introduction to Epidemiology","Health Communication & Advocacy","Research Methods in Global Health I","Social Determinants of Health","Introduction to International Development","Academic Writing & Research Skills"]},
+    {label:"Year 2 — Core Global Health",modules:["Intermediate Epidemiology","Biostatistics & Data Analysis for Global Health","Global Health Governance & Institutions","Infectious Disease — HIV, TB, Malaria & NTDs","Maternal, Newborn & Child Health","Health Systems & Universal Health Coverage","Global Health Financing","Nutrition & Food Security","Research Methods in Global Health II"]},
+    {label:"Year 3 — Applied Global Health",modules:["Non-Communicable Disease Prevention Globally","Global Health Programme Design & Evaluation","Community Health & Primary Care Globally","Mental Health in Low- & Middle-Income Countries","Humanitarian Health & Emergency Response","Digital Health & mHealth in LMICs","Health Economics & Priority Setting","Global Health Field Practicum","Elective — One Health / Refugee Health / Health Policy Advocacy"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Global Health Leadership & Policy","Advanced Health Systems Strengthening","Health Technology Assessment","Antimicrobial Resistance & Global Threats","Climate Change & Planetary Health","Global Health Ethics & Human Rights","International Health Regulations & Diplomacy","Global Health Research Capstone Project","Professional Development & Career Readiness"]},
+  ],
+};
+
+/* ═══════════════════════════════════════════════
+   DIPLOMA MODULES — 14 modules each (25 programmes)
+   ═══════════════════════════════════════════════ */
+const DIPLOMA_MODS = {
+  "dba":[
+    {t:"Foundations of Business Management",d:"Core management functions, planning, organising, leading and controlling in business"},
+    {t:"Financial Accounting for Business",d:"Basic accounting principles, bookkeeping, financial statements and interpretation"},
+    {t:"Marketing Principles & Practice",d:"Market analysis, segmentation, marketing mix and customer value creation"},
+    {t:"Human Resource Management Essentials",d:"Recruitment, motivation, performance management and employment relations basics"},
+    {t:"Business Communication & Professional Skills",d:"Written and oral communication, report writing, presentations and professional conduct"},
+    {t:"Operations Management Basics",d:"Process design, production planning, quality control and operational efficiency"},
+    {t:"Business Law & Ethics",d:"Contract law, business regulations, corporate governance and ethical decision-making"},
+    {t:"Entrepreneurship & Small Business Management",d:"Starting and managing SMEs, business planning and entrepreneurial practice"},
+    {t:"Business Information Technology",d:"Computer applications, spreadsheets, databases and digital tools for business"},
+    {t:"Economics for Business",d:"Micro and macroeconomic principles and their application to business decisions"},
+    {t:"Financial Management",d:"Budgeting, cash flow management, investment decisions and financial planning"},
+    {t:"Strategic Management",d:"Business environment analysis, competitive strategy and strategic planning tools"},
+    {t:"Project Management Fundamentals",d:"Project lifecycle, planning, scheduling, monitoring and closure techniques"},
+    {t:"Business Research & Analysis",d:"Data collection, analysis, report writing and evidence-based business decisions"},
+  ],
+  "dms":[
+    {t:"Principles of Management",d:"Classical and modern management theory, functions and effective managerial practice"},
+    {t:"Organisational Behaviour",d:"Individual motivation, group dynamics, leadership and organisational culture"},
+    {t:"Business Communication",d:"Effective written, verbal and digital communication in management contexts"},
+    {t:"Human Resource Management",d:"HR functions including recruitment, training, appraisal and employee relations"},
+    {t:"Financial Management for Managers",d:"Budgeting, financial reporting, cash flow and resource allocation for managers"},
+    {t:"Marketing for Managers",d:"Market research, positioning, customer relationship management and digital marketing"},
+    {t:"Operations & Quality Management",d:"Process improvement, quality systems, lean management and operational efficiency"},
+    {t:"Strategic Management",d:"Environmental analysis, competitive strategy formulation and strategic implementation"},
+    {t:"Leadership & Team Development",d:"Leadership styles, building high-performing teams and conflict management"},
+    {t:"Entrepreneurship & Innovation",d:"Business model innovation, creative problem solving and entrepreneurial leadership"},
+    {t:"Project Management",d:"Project planning, risk management, stakeholder engagement and project delivery"},
+    {t:"Business Law & Corporate Governance",d:"Legal frameworks, regulatory compliance and governance responsibilities for managers"},
+    {t:"Business Research Methods",d:"Research design, data collection and analysis for management decision-making"},
+    {t:"Ethics & Corporate Social Responsibility",d:"Ethical leadership, sustainability, stakeholder responsibility and social accountability"},
+  ],
+  "dhrm":[
+    {t:"Foundations of Human Resource Management",d:"The HR function, roles, structure and strategic contribution to organisations"},
+    {t:"Recruitment, Selection & Onboarding",d:"Job analysis, sourcing, interviewing, assessment tools and induction practices"},
+    {t:"Training, Learning & Development",d:"Training needs analysis, programme design, delivery modes and evaluation methods"},
+    {t:"Performance Management Systems",d:"Goal-setting, appraisal methods, feedback techniques and performance improvement"},
+    {t:"Compensation, Benefits & Payroll",d:"Job evaluation, salary structures, incentive plans, payroll principles and benefits design"},
+    {t:"Employment Law & Labour Relations",d:"Employment contracts, termination, labour regulations, unions and dispute resolution"},
+    {t:"Diversity, Inclusion & Equality",d:"Managing diverse workforces, anti-discrimination, equity frameworks and inclusive practices"},
+    {t:"HR Information Systems",d:"HRIS tools, digital HR, people data management and HR reporting dashboards"},
+    {t:"Organisational Behaviour",d:"Individual motivation, group dynamics, communication and organisational culture"},
+    {t:"Workforce Planning & Analytics",d:"Demand forecasting, talent pipeline planning and basic HR analytics"},
+    {t:"Employee Wellness & Occupational Health",d:"Wellbeing programmes, stress management, workplace safety and health promotion"},
+    {t:"Change Management & OD",d:"Managing organisational change, OD principles and supporting transformation"},
+    {t:"HR Communication & Professional Skills",d:"Internal communication, HR writing, presentations and professional conduct"},
+    {t:"HR Research & Evidence-Based Practice",d:"Using HR data, research and evaluation to drive people management decisions"},
+  ],
+  "dmarketing":[
+    {t:"Marketing Principles & the Marketing Mix",d:"Product, price, place and promotion — the foundational 4Ps and their modern extensions"},
+    {t:"Consumer Behaviour",d:"Understanding buyer psychology, decision journeys and what drives purchasing behaviour"},
+    {t:"Market Research & Analysis",d:"Research design, survey tools, data collection, analysis and market intelligence"},
+    {t:"Digital Marketing Fundamentals",d:"SEO, SEM, email marketing, social media and online advertising platforms"},
+    {t:"Social Media Marketing",d:"Strategy, content planning, community management and performance analytics on social platforms"},
+    {t:"Brand Management",d:"Brand identity, brand equity, positioning and maintaining brand consistency"},
+    {t:"Advertising & Promotions",d:"Campaign design, media planning, copywriting and measuring advertising effectiveness"},
+    {t:"Content Marketing & Storytelling",d:"Developing relevant, engaging content strategies that attract and retain audiences"},
+    {t:"Customer Relationship Management",d:"CRM systems, loyalty programmes, customer lifetime value and retention strategies"},
+    {t:"Sales Management & Techniques",d:"Sales process, sales team management, negotiation and closing strategies"},
+    {t:"Marketing Analytics & Metrics",d:"Key performance indicators, dashboards and data-driven marketing decision-making"},
+    {t:"International & Cross-Cultural Marketing",d:"Adapting marketing strategies for global markets and diverse cultural contexts"},
+    {t:"Marketing Ethics & Sustainability",d:"Responsible advertising, green marketing and ethical marketing practice"},
+    {t:"Marketing Strategy & Planning",d:"Developing integrated marketing plans aligned with business objectives and budgets"},
+  ],
+  "dpm":[
+    {t:"Project Management Fundamentals",d:"Project definition, project lifecycle, key terminology and the PM knowledge areas"},
+    {t:"Project Initiation & Charter Development",d:"Defining scope, objectives, stakeholders and preparing the project charter"},
+    {t:"Project Planning & WBS",d:"Work breakdown structure, deliverables, milestones and detailed project planning"},
+    {t:"Scheduling & Time Management",d:"Gantt charts, critical path method, PERT and managing project timelines"},
+    {t:"Project Cost Estimation & Budgeting",d:"Cost types, estimation methods, baseline budgets and earned value management"},
+    {t:"Risk Management in Projects",d:"Risk identification, risk registers, qualitative and quantitative risk analysis"},
+    {t:"Quality Management in Projects",d:"Quality planning, assurance, control and continuous improvement in projects"},
+    {t:"Project Team Leadership & Communication",d:"Building project teams, managing conflict, stakeholder communication and reporting"},
+    {t:"Procurement & Contract Management",d:"Procurement planning, vendor selection, contracting and supplier management"},
+    {t:"Agile & Scrum Project Management",d:"Agile values and principles, Scrum ceremonies, sprint planning and backlog management"},
+    {t:"Stakeholder Engagement & Reporting",d:"Stakeholder mapping, engagement strategies, progress reporting and dashboards"},
+    {t:"Project Monitoring & Control",d:"Progress tracking, variance analysis, corrective actions and change management"},
+    {t:"Project Closure & Lessons Learned",d:"Formal project closure, handover, documentation and lessons learned reviews"},
+    {t:"PM Software & Digital Tools",d:"Practical use of MS Project, Trello, Asana, Monday.com or equivalent PM tools"},
+  ],
+  "dfinance":[
+    {t:"Financial Accounting Principles",d:"Bookkeeping, double-entry accounting, trial balance and basic financial statements"},
+    {t:"Introduction to Corporate Finance",d:"Time value of money, capital budgeting, cost of capital and firm financing basics"},
+    {t:"Financial Statement Analysis",d:"Reading and interpreting income statements, balance sheets and cash flow statements"},
+    {t:"Budgeting & Financial Planning",d:"Preparing operating and capital budgets, variance analysis and rolling forecasts"},
+    {t:"Investment Analysis",d:"Risk and return, asset classes, portfolio basics and evaluating investment options"},
+    {t:"Financial Markets & Instruments",d:"Money markets, capital markets, equities, bonds, derivatives and mutual funds"},
+    {t:"Managerial Finance & Decision Making",d:"Financial data for management decisions including make-or-buy and pricing analysis"},
+    {t:"Taxation Principles",d:"Personal and corporate tax fundamentals, compliance obligations and tax planning basics"},
+    {t:"Risk Management & Insurance Basics",d:"Types of financial risk, hedging instruments and the role of insurance in risk management"},
+    {t:"Banking & Credit Management",d:"Banking services, lending principles, credit assessment and managing credit risk"},
+    {t:"International Finance Basics",d:"Exchange rates, international payments, foreign currency risk and global finance"},
+    {t:"Financial Regulations & Ethics",d:"Financial sector regulation, professional ethics and corporate governance in finance"},
+    {t:"Financial Technology (Fintech)",d:"Digital payments, mobile banking, fintech innovation and the future of financial services"},
+    {t:"Financial Research & Reporting",d:"Sourcing financial data, research tools, writing financial reports and analysis"},
+  ],
+  "daccounting":[
+    {t:"Financial Accounting I — Basics",d:"Double-entry bookkeeping, ledgers, trial balance and preparation of basic accounts"},
+    {t:"Financial Accounting II — Intermediate",d:"Adjustments, accruals, prepayments, depreciation and final account preparation"},
+    {t:"Cost & Management Accounting",d:"Cost classification, job costing, process costing and management decisions"},
+    {t:"Business Taxation",d:"Income tax for individuals and corporates, VAT/GST principles and filing obligations"},
+    {t:"Auditing Principles",d:"Audit concepts, internal vs external audit, audit planning and basic procedures"},
+    {t:"Financial Statement Analysis",d:"Ratio analysis, trend analysis and interpreting accounts for decision-making"},
+    {t:"Accounting Information Systems",d:"Accounting software, spreadsheets, automated posting and digital accounting tools"},
+    {t:"Business Law for Accountants",d:"Contract law, company law, insolvency and legal obligations relevant to accountants"},
+    {t:"Payroll & Personnel Administration",d:"Payroll calculations, statutory deductions, PAYE and employee benefits administration"},
+    {t:"Public Sector Accounting",d:"Government accounting standards, budget reporting and accountability in public entities"},
+    {t:"Ethics & Corporate Governance",d:"Professional ethics, codes of conduct, conflict of interest and governance responsibilities"},
+    {t:"Budgeting & Cash Flow Management",d:"Cash flow forecasting, operating budgets and managing liquidity in organisations"},
+    {t:"Accounting for Non-Accountants",d:"Communicating financial information clearly to non-financial managers and stakeholders"},
+    {t:"Professional Accounting Practice",d:"Professional skills, exam techniques and practical accounting competency development"},
+  ],
+  "dph":[
+    {t:"Introduction to Public Health",d:"Definitions, scope, history and core functions of public health systems"},
+    {t:"Epidemiology Basics",d:"Incidence, prevalence, rates, disease distribution and basic epidemiological study designs"},
+    {t:"Health Behaviour & Promotion",d:"Behaviour change theories, health education strategies and community interventions"},
+    {t:"Social Determinants of Health",d:"How poverty, education, gender and environment shape population health outcomes"},
+    {t:"Environmental Health",d:"Water, sanitation, air quality, food safety and environmental hazards affecting health"},
+    {t:"Maternal, Child & Adolescent Health",d:"Key interventions for reducing maternal and child mortality and promoting adolescent health"},
+    {t:"Communicable Disease Control",d:"Infection prevention, outbreak response, immunisation and disease surveillance basics"},
+    {t:"Non-Communicable Disease Prevention",d:"Risk factors and prevention strategies for cancer, diabetes, cardiovascular and chronic diseases"},
+    {t:"Health Systems & Primary Care",d:"Organisation of health systems, primary health care and essential health service delivery"},
+    {t:"Health Statistics & Data Basics",d:"Reading health data, vital statistics, graphs and basic quantitative interpretation"},
+    {t:"Health Policy & Planning",d:"Policy development, health planning cycles and resource allocation in health systems"},
+    {t:"Nutrition & Public Health",d:"Malnutrition, micronutrient deficiencies and nutrition promotion in communities"},
+    {t:"Mental Health in the Community",d:"Common mental disorders, stigma reduction and community-based mental health support"},
+    {t:"Health Research & Report Writing",d:"Designing basic health studies, data collection tools and writing public health reports"},
+  ],
+  "dha":[
+    {t:"Introduction to Health Administration",d:"Roles, functions and structure of health management in diverse health settings"},
+    {t:"Health Systems & Service Delivery",d:"Organisation of health systems, service delivery models and primary care management"},
+    {t:"Healthcare Finance & Budgeting",d:"Health budgets, cost centres, financial reporting and resource allocation basics"},
+    {t:"Human Resource Management in Health",d:"Staffing, recruitment, motivation and managing health workforce performance"},
+    {t:"Health Information & Records Management",d:"Patient records, health data systems, confidentiality and information governance"},
+    {t:"Quality Improvement in Healthcare",d:"Patient safety culture, incident reporting, continuous quality improvement frameworks"},
+    {t:"Health Policy & Regulatory Environment",d:"National health policy, licensing, accreditation standards and regulatory compliance"},
+    {t:"Healthcare Marketing & Community Relations",d:"Engaging patients and communities, health communication and facility image management"},
+    {t:"Leadership & Teamwork in Health",d:"Building health teams, managing interdisciplinary staff and effective leadership styles"},
+    {t:"Project Management for Health Programmes",d:"Planning, implementing and evaluating health-specific projects and service improvements"},
+    {t:"Supply Chain Management in Health",d:"Pharmaceutical supply chains, essential medicines management and health procurement"},
+    {t:"Health Monitoring & Evaluation",d:"Health programme indicators, data use, reporting and performance review processes"},
+    {t:"Ethics & Professional Practice in Health",d:"Medical ethics, patient rights, confidentiality and professional accountability in health"},
+    {t:"Health Research & Evidence Use",d:"Reading and applying evidence to health management decisions and quality improvement"},
+  ],
+  "dsw":[
+    {t:"Introduction to Social Work",d:"History, values, principles, scope and professional identity of social work"},
+    {t:"Human Growth & Development",d:"Lifespan developmental theory and its application to social work assessment"},
+    {t:"Social Policy & Welfare",d:"Social protection systems, welfare benefits and the policy context of social work"},
+    {t:"Social Work Practice Methods",d:"Individual, family, group and community social work intervention approaches"},
+    {t:"Communication Skills in Social Work",d:"Active listening, interviewing, documentation and engaging diverse client groups"},
+    {t:"Child Protection & Safeguarding",d:"Recognising abuse and neglect, child protection processes and safeguarding frameworks"},
+    {t:"Mental Health & Social Work",d:"Mental illness, assessment, community care and supporting people with mental health needs"},
+    {t:"Community Development",d:"Community profiling, mobilisation, participatory development and advocacy skills"},
+    {t:"Social Work Law & Ethics",d:"Statutory duties, codes of ethics, confidentiality and legal basis for social work"},
+    {t:"Gender & Vulnerability in Social Work",d:"Gender-based violence, disability, poverty and working with marginalised populations"},
+    {t:"Counselling Skills",d:"Basic counselling theories, active listening, empathy and helping relationship skills"},
+    {t:"Monitoring & Evaluation in Social Programmes",d:"Tracking client outcomes, reporting and evaluating effectiveness of social interventions"},
+    {t:"Substance Abuse & Addiction",d:"Understanding addiction, harm reduction and evidence-based approaches to recovery support"},
+    {t:"Supervised Practice / Field Work",d:"Guided placement in a social work setting to develop and apply practical skills"},
+  ],
+  "deducation":[
+    {t:"Foundations of Education",d:"Philosophy, history and sociology of education and their relevance for teaching today"},
+    {t:"Educational Psychology",d:"Learning theories, motivation, child development and classroom behaviour management"},
+    {t:"Curriculum Design & Development",d:"Curriculum planning, syllabus writing, learning outcomes and content organisation"},
+    {t:"Teaching Methodologies",d:"Effective instructional strategies, lesson planning, differentiated instruction and questioning techniques"},
+    {t:"Assessment & Evaluation in Education",d:"Formative and summative assessment design, marking, feedback and grade reporting"},
+    {t:"Classroom Management",d:"Creating a conducive learning environment, managing behaviour and establishing routines"},
+    {t:"Inclusive Education",d:"Teaching learners with diverse needs, special educational needs and disability-inclusive classrooms"},
+    {t:"Educational Technology",d:"Integrating ICT in teaching and learning, e-learning tools and digital resources"},
+    {t:"Language in Education",d:"Medium of instruction, reading development, language acquisition and multilingual classrooms"},
+    {t:"Child Rights & Safeguarding",d:"Learner rights, child protection in school settings and duty of care for educators"},
+    {t:"Guidance & Counselling in Schools",d:"Student welfare, career guidance, pastoral care and supporting at-risk learners"},
+    {t:"School Leadership & Administration Basics",d:"Understanding school governance, administration and working with educational leaders"},
+    {t:"Teaching Practicum",d:"Supervised classroom teaching experience with reflective practice and mentoring"},
+    {t:"Education Research & Professional Development",d:"Evidence-based teaching, professional portfolios and lifelong learning for educators"},
+  ],
+  "dme":[
+    {t:"Introduction to Monitoring & Evaluation",d:"Definitions, principles, purpose and the role of M&E in project and programme management"},
+    {t:"Theory of Change & Logic Models",d:"Developing results chains, logical frameworks and theories of change for programmes"},
+    {t:"Results-Based Management",d:"RBM principles, SMART indicators, targets, baselines and performance frameworks"},
+    {t:"Quantitative Data Collection Methods",d:"Survey design, sampling strategies, questionnaire development and data quality"},
+    {t:"Qualitative Data Collection Methods",d:"Interviews, focus groups, observation and participatory methods for evaluation"},
+    {t:"Data Management & Quality Assurance",d:"Data entry, cleaning, storage, validation and ensuring reliable M&E datasets"},
+    {t:"M&E Data Analysis Basics",d:"Descriptive statistics, trend analysis, comparing targets vs actuals and basic SPSS/Excel"},
+    {t:"Data Visualisation & Reporting",d:"Charts, dashboards, infographics and writing clear M&E reports for stakeholders"},
+    {t:"Project Cycle & Log Frames",d:"Project cycle management, donor log frames, indicators and M&E planning in projects"},
+    {t:"Evaluation Design & Methods",d:"Choosing evaluation types, process vs impact evaluation and mixed methods approaches"},
+    {t:"Gender & Social Inclusion in M&E",d:"Disaggregating data by gender and vulnerable groups, and measuring equity outcomes"},
+    {t:"Digital M&E Tools",d:"ODK, KoBoToolbox, DHIS2 and mobile data collection platforms for field M&E"},
+    {t:"M&E Communication & Utilisation",d:"Presenting findings to stakeholders and promoting evidence use for programme learning"},
+    {t:"Practical M&E Project / Attachment",d:"Applying M&E skills in a real project setting with guided mentorship and deliverables"},
+  ],
+  "dscm":[
+    {t:"Introduction to Supply Chain Management",d:"SCM concepts, value chain structure, supply chain flows and strategic importance"},
+    {t:"Procurement & Purchasing",d:"Procurement processes, supplier sourcing, tendering, bidding and purchase order management"},
+    {t:"Inventory Management",d:"Stock control systems, reorder points, safety stock, ABC analysis and inventory auditing"},
+    {t:"Warehousing & Storage Management",d:"Warehouse layout, receiving, storage, picking, packing and warehouse technology"},
+    {t:"Transportation & Logistics",d:"Modes of transport, freight management, routing, fleet management and 3PL providers"},
+    {t:"Supplier Management & Relations",d:"Supplier evaluation, performance management, contract administration and partnerships"},
+    {t:"Customs, Trade & Import/Export",d:"International trade procedures, customs documentation, Incoterms and export compliance"},
+    {t:"Supply Chain Finance & Costing",d:"Total cost of ownership, landed costs, SCM budgeting and cost reduction strategies"},
+    {t:"Demand Forecasting & Planning",d:"Demand planning methods, sales forecasting and collaborative planning (CPFR)"},
+    {t:"Quality in the Supply Chain",d:"Quality standards, supplier quality audits, inspection and quality assurance frameworks"},
+    {t:"Supply Chain Risk Management",d:"Disruption risks, risk mapping, contingency planning and supply chain resilience"},
+    {t:"Digital Tools in Supply Chain",d:"ERP systems, SCM software, barcode/RFID technology and e-procurement platforms"},
+    {t:"Humanitarian & Public Sector Supply Chains",d:"Aid logistics, essential medicines supply chains and public procurement processes"},
+    {t:"Supply Chain Capstone / Practical Project",d:"Applied project solving a real supply chain challenge with analysis and recommendations"},
+  ],
+  "dent":[
+    {t:"Introduction to Entrepreneurship",d:"Entrepreneurial mindset, traits, opportunity recognition and the entrepreneurship ecosystem"},
+    {t:"Business Idea Generation & Validation",d:"Brainstorming tools, design thinking, customer discovery and validating business ideas"},
+    {t:"Business Planning",d:"Writing a business plan — vision, mission, market analysis, operations and financial projections"},
+    {t:"Marketing for Entrepreneurs",d:"Low-cost marketing strategies, digital marketing, branding and customer acquisition"},
+    {t:"Financial Management for Startups",d:"Basic bookkeeping, cash flow management, pricing, break-even analysis and funding needs"},
+    {t:"Legal Structures & Business Registration",d:"Business types, registration requirements, IP protection and regulatory compliance"},
+    {t:"Sales & Customer Relationship Management",d:"Sales techniques, customer retention, relationship building and sales pipeline management"},
+    {t:"Innovation & Product Development",d:"Lean startup methodology, MVP development, iteration and product-market fit"},
+    {t:"Funding & Investment for Startups",d:"Bootstrapping, microfinance, grants, angel investors and accessing startup capital"},
+    {t:"Digital Business & E-Commerce",d:"Building online businesses, e-commerce platforms, digital payments and digital marketing"},
+    {t:"Social Entrepreneurship",d:"Social enterprise models, measuring social impact and sustainable social business"},
+    {t:"Operations Management for SMEs",d:"Managing day-to-day operations, productivity, suppliers and quality for small businesses"},
+    {t:"Leadership & Teambuilding for Entrepreneurs",d:"Leading startup teams, managing people, delegation and entrepreneurial leadership"},
+    {t:"Entrepreneurship Capstone / Business Pitch",d:"Developing and presenting a complete business proposition to an evaluation panel"},
+  ],
+  "dir":[
+    {t:"Introduction to International Relations",d:"Scope, actors, history and foundational concepts in the study of world affairs"},
+    {t:"IR Theory",d:"Realism, liberalism, constructivism and other major theoretical traditions in IR"},
+    {t:"Global Political Economy",d:"International trade, finance, economic institutions and power dynamics in the global economy"},
+    {t:"Diplomacy & Foreign Policy",d:"How states conduct diplomacy, foreign policy instruments and bilateral/multilateral relations"},
+    {t:"International Organisations",d:"The United Nations, regional bodies (AU, EU, SADC) and their roles in global governance"},
+    {t:"International Security & Conflict",d:"Sources of conflict, wars, terrorism, peacekeeping and post-conflict reconstruction"},
+    {t:"Human Rights & International Humanitarian Law",d:"Human rights frameworks, international humanitarian law and protection mechanisms"},
+    {t:"African Politics & Regional Integration",d:"Political developments in Africa, AU, SADC, ECOWAS and continental integration dynamics"},
+    {t:"Development & Global Inequality",d:"North-South relations, aid, debt, development finance and global inequality debates"},
+    {t:"International Trade & WTO",d:"WTO rules, trade agreements, trade disputes and implications for developing countries"},
+    {t:"Climate Change & Global Governance",d:"International climate negotiations, Paris Agreement and multilateral environmental governance"},
+    {t:"Migration, Refugees & Displacement",d:"Global migration patterns, refugee law, UNHCR and managing forced displacement"},
+    {t:"Media, Propaganda & International Affairs",d:"Role of media, information warfare, public diplomacy and soft power in IR"},
+    {t:"IR Research & Policy Analysis",d:"Researching IR topics, writing policy briefs, analytical reports and academic essays"},
+  ],
+  "dlg":[
+    {t:"Foundations of Leadership",d:"Leadership definitions, traits, theories and the distinction between leadership and management"},
+    {t:"Governance Principles & Frameworks",d:"Good governance concepts, accountability, transparency, rule of law and participation"},
+    {t:"Public Administration & Service Delivery",d:"How governments function, service delivery principles and the role of public servants"},
+    {t:"Leadership Styles & Situational Leadership",d:"Authoritative, democratic, servant and situational leadership models and their application"},
+    {t:"Ethics in Leadership & Governance",d:"Ethical decision-making, professional integrity, anti-corruption and public accountability"},
+    {t:"Strategic Planning & Management",d:"Vision, mission, strategy formulation, balanced scorecard and implementation frameworks"},
+    {t:"Public Financial Management",d:"Government budgeting, fiscal management, procurement regulations and financial accountability"},
+    {t:"Communication & Stakeholder Engagement",d:"Leadership communication, public engagement, media relations and community outreach"},
+    {t:"Policy Analysis & Development",d:"Policy cycle, analysis tools, writing policy briefs and understanding government decision-making"},
+    {t:"Change Management in Organisations",d:"Leading institutional transformation, resistance management and sustaining change"},
+    {t:"Team Building & Human Capital Development",d:"Building productive teams, coaching, mentoring and developing people capacity"},
+    {t:"Decentralisation & Local Governance",d:"Subnational governance, local authorities, community participation and fiscal devolution"},
+    {t:"Conflict Management & Negotiation",d:"Sources of conflict, mediation techniques, negotiation skills and consensus building"},
+    {t:"Leadership Capstone / Case Studies",d:"Analysing real governance challenges and developing evidence-based leadership solutions"},
+  ],
+  "dda":[
+    {t:"Introduction to Data Analytics",d:"What data analytics is, its business value, types of analytics and the analytics process"},
+    {t:"Data Collection & Data Sources",d:"Primary and secondary data, data types, surveys, APIs, web data and open data sources"},
+    {t:"Microsoft Excel for Data Analysis",d:"Advanced Excel — pivot tables, VLOOKUP, data cleaning, charts and basic statistics"},
+    {t:"Introduction to Statistics",d:"Descriptive statistics, distributions, probability, correlation and regression basics"},
+    {t:"Introduction to SQL & Databases",d:"Querying databases, SELECT statements, joins, aggregations and basic database management"},
+    {t:"Data Visualisation Fundamentals",d:"Chart types, dashboard design, storytelling with data and visualisation best practices"},
+    {t:"Power BI / Tableau for Business Intelligence",d:"Building interactive dashboards, connecting data sources and publishing reports"},
+    {t:"Python or R for Data Analysis",d:"Basic programming for data manipulation, cleaning, analysis and visualisation"},
+    {t:"Business Intelligence & Reporting",d:"BI tools, KPI dashboards, automated reporting and management information systems"},
+    {t:"Data Cleaning & Data Quality",d:"Identifying and fixing missing data, duplicates, outliers and ensuring data integrity"},
+    {t:"Predictive Analytics Basics",d:"Introduction to regression modelling, forecasting and machine learning concepts"},
+    {t:"Data Ethics & Privacy",d:"Data governance, GDPR, responsible use of data and ethical analytics practice"},
+    {t:"Analytics in Business Contexts",d:"Applying analytics in finance, marketing, HR, supply chain and operations settings"},
+    {t:"Analytics Capstone Project",d:"Solving a real-world business problem using data analysis and presenting insights"},
+  ],
+  "dhm":[
+    {t:"Introduction to Hospitality Management",d:"Overview of the hospitality industry — hotels, restaurants, events and tourism"},
+    {t:"Hotel Operations & Front Office Management",d:"Reservations, check-in/out, rooms division, night audit and front desk operations"},
+    {t:"Food & Beverage Management",d:"Restaurant operations, menu design, food costing, kitchen management and service standards"},
+    {t:"Customer Service Excellence",d:"Service quality principles, handling complaints, guest recovery and building loyalty"},
+    {t:"Housekeeping & Facilities Management",d:"Housekeeping operations, cleaning standards, maintenance and property presentation"},
+    {t:"Hospitality Marketing & Sales",d:"Revenue generation strategies, OTA management, branding and sales techniques"},
+    {t:"Food Safety, Hygiene & HACCP",d:"Food hygiene regulations, HACCP principles, allergen management and safety compliance"},
+    {t:"Events & Conference Management",d:"Planning, organising and managing hospitality events, meetings and corporate functions"},
+    {t:"Revenue Management & Pricing",d:"Dynamic pricing, yield management, occupancy optimisation and rate strategy"},
+    {t:"Hospitality Financial Management",d:"Cost control, budgeting, P&L analysis and financial performance in hospitality"},
+    {t:"Tourism & Hospitality Law",d:"Guest contracts, liability, licensing, health & safety and consumer rights in hospitality"},
+    {t:"Sustainable Hospitality Practices",d:"Green hotel operations, energy efficiency, waste management and responsible tourism"},
+    {t:"Digital Technology in Hospitality",d:"PMS systems, booking platforms, AI in hospitality and digital guest experience"},
+    {t:"Hospitality Internship / Practical",d:"Hands-on industry placement across hotel, F&B or events departments with supervised learning"},
+  ],
+  "dem":[
+    {t:"Introduction to Environmental Management",d:"Scope, principles, challenges and career paths in environmental management"},
+    {t:"Ecology & Natural Systems",d:"Ecosystem functions, biodiversity, ecological carrying capacity and environmental change"},
+    {t:"Environmental Policy & Law",d:"National and international environmental legislation, regulations and compliance frameworks"},
+    {t:"Environmental Impact Assessment",d:"EIA process — screening, scoping, assessment, review and monitoring in practice"},
+    {t:"Climate Change Fundamentals",d:"Climate science, greenhouse gas emissions, global warming impacts and response strategies"},
+    {t:"Water Resources Management",d:"Water cycle, water quality, water governance and sustainable water use"},
+    {t:"Waste Management & Pollution Control",d:"Solid waste, hazardous waste, pollution types and waste minimisation strategies"},
+    {t:"Environmental Monitoring & Auditing",d:"Monitoring methods, environmental audits, compliance checking and reporting"},
+    {t:"Sustainable Development",d:"Brundtland definition, SDGs, green economy and sustainable development frameworks"},
+    {t:"Natural Resource Management",d:"Forest, land, fisheries and wildlife resource governance and management practices"},
+    {t:"Environmental Economics",d:"Valuing ecosystem services, cost-benefit analysis and market-based environmental tools"},
+    {t:"Corporate Environmental Management",d:"ISO 14001, EMS, corporate sustainability reporting and green business practice"},
+    {t:"Community & Stakeholder Engagement",d:"Participatory approaches to environmental management and community-based conservation"},
+    {t:"Environmental Research & Reporting",d:"Designing environmental studies, data collection and writing environmental reports"},
+  ],
+  "dnpm":[
+    {t:"Introduction to Nonprofit Management",d:"Nonprofit sector overview, legal structures, mission-driven management and governance"},
+    {t:"NGO Governance & Board Development",d:"Board roles, governance frameworks, board-staff relations and fiduciary responsibilities"},
+    {t:"Fundraising & Resource Mobilisation",d:"Grant writing, donor relations, diversifying funding sources and fundraising strategy"},
+    {t:"Nonprofit Financial Management",d:"Budgeting, accounting standards for NGOs, audit readiness and donor financial reporting"},
+    {t:"Programme Design & Implementation",d:"Log frames, theory of change, work planning and managing programme delivery"},
+    {t:"Monitoring, Evaluation & Learning",d:"M&E frameworks, indicators, data collection and using evidence for organisational learning"},
+    {t:"Strategic Planning for NGOs",d:"Environmental scanning, strategic priorities, goal alignment and strategic plan development"},
+    {t:"Human Resource Management in NGOs",d:"Volunteer management, HR policies, staff welfare and performance management in nonprofits"},
+    {t:"Project Management for Nonprofits",d:"Project planning, risk management, reporting and closing development projects"},
+    {t:"Stakeholder Engagement & Advocacy",d:"Identifying stakeholders, influencing policy, coalition building and community engagement"},
+    {t:"Communications & Reporting for Donors",d:"Report writing, impact communication, annual reports and donor accountability"},
+    {t:"Social Enterprise & Income Generation",d:"Developing non-grant revenue streams, social enterprise models and financial sustainability"},
+    {t:"Leadership & Organisational Culture in NGOs",d:"Values-based leadership, building culture, managing change and motivating mission-driven staff"},
+    {t:"Nonprofit Capstone / Organisational Case Study",d:"Applying nonprofit management principles to a real organisational challenge and presenting solutions"},
+  ],
+  "dsd":[
+    {t:"Introduction to Sustainable Development",d:"Definitions, history of sustainable development and the three pillars — social, economic, environmental"},
+    {t:"The Sustainable Development Goals (SDGs)",d:"The 17 SDGs, their targets, indicators and how they guide global development action"},
+    {t:"Climate Change & Sustainable Responses",d:"Climate impacts, mitigation, adaptation, NDCs and the transition to a low-carbon economy"},
+    {t:"Green Economy & Sustainable Business",d:"Green economy principles, circular economy, sustainable business models and ESG"},
+    {t:"Biodiversity & Ecosystem Management",d:"Protecting ecosystems, biodiversity hotspots, conservation approaches and policy frameworks"},
+    {t:"Sustainable Agriculture & Food Systems",d:"Agroecology, food security, sustainable farming and reducing agricultural environmental impact"},
+    {t:"Water, Sanitation & Sustainable Communities",d:"WASH, water governance, sustainable urban planning and community resilience"},
+    {t:"Social Development & Human Rights",d:"Poverty reduction, equity, social inclusion and human rights in development practice"},
+    {t:"Governance for Sustainable Development",d:"Institutions, accountability, transparency and governance for SDG achievement"},
+    {t:"Sustainable Finance & Investment",d:"Green bonds, impact investing, SDG financing and aligning capital with sustainability"},
+    {t:"Climate Justice & Vulnerable Communities",d:"Who bears climate costs, loss & damage, equity in climate action and just transition"},
+    {t:"Monitoring & Reporting on Sustainability",d:"Sustainability indicators, GRI, integrated reporting and tracking progress on SDGs"},
+    {t:"Community-Based Sustainable Development",d:"Participatory development, local solutions, community resilience and grassroots sustainability"},
+    {t:"Sustainable Development Research Project",d:"Investigating a sustainability challenge and proposing evidence-based development solutions"},
+  ],
+  "dnlm":[
+    {t:"Foundations of Nonprofit Leadership",d:"Leadership in mission-driven organisations, values-based leadership and ethical stewardship"},
+    {t:"Governance & Board Management",d:"Board composition, governance best practices, fiduciary duties and board-management partnerships"},
+    {t:"Strategic Leadership in Nonprofits",d:"Strategic planning, theory of change, adaptive management and organisational agility"},
+    {t:"Financial Stewardship & Accountability",d:"Financial management, budgeting, audit readiness and transparent donor reporting"},
+    {t:"Fundraising Strategy & Donor Relations",d:"Developing a fundraising strategy, grant writing, major donors and income diversification"},
+    {t:"People Leadership & Team Management",d:"Leading staff and volunteers, performance management and building inclusive teams"},
+    {t:"Programme Design & Quality Management",d:"Developing effective programmes, logic frameworks, quality standards and best practices"},
+    {t:"Monitoring, Evaluation & Organisational Learning",d:"Designing M&E systems, using data and building a culture of learning and improvement"},
+    {t:"Advocacy, Communication & Influence",d:"Influencing policy, engaging media, public communications and brand management for NGOs"},
+    {t:"Partnerships, Networks & Coalition Building",d:"Strategic partnerships, consortium management and collaborative working in the NGO sector"},
+    {t:"Change Leadership & Organisational Development",d:"Leading change, managing transitions, culture transformation and OD in nonprofit contexts"},
+    {t:"Digital Transformation in Nonprofits",d:"Digital tools for operations, data management, online fundraising and technology for impact"},
+    {t:"Social Innovation & Impact Entrepreneurship",d:"Creating new solutions to social problems, scaling impact and social innovation methods"},
+    {t:"Leadership Capstone / Action Research Project",d:"Leadership inquiry applying theory to a real nonprofit challenge with reflective learning"},
+  ],
+  "pgdm":[
+    {t:"Management Principles & Organisational Behaviour",d:"Core management functions, organisational dynamics and managerial decision-making frameworks"},
+    {t:"Strategic Management",d:"Competitive strategy, strategic analysis tools and strategic planning for organisations"},
+    {t:"Financial Management & Accounting",d:"Financial reporting, capital budgeting, cost management and financial decision-making"},
+    {t:"Marketing Management",d:"Market analysis, segmentation, brand strategy and integrated marketing communications"},
+    {t:"Human Resource Management",d:"HR strategy, talent management, performance systems and employee relations"},
+    {t:"Operations & Supply Chain Management",d:"Process design, quality systems, supply chain strategy and operational excellence"},
+    {t:"Business Research Methods",d:"Quantitative and qualitative research for management with data analysis applications"},
+    {t:"Entrepreneurship & Innovation",d:"Entrepreneurial thinking, business model innovation and corporate intrapreneurship"},
+    {t:"Leadership & Change Management",d:"Leadership models, managing change and developing leadership effectiveness"},
+    {t:"Corporate Governance & Business Ethics",d:"Governance frameworks, stakeholder accountability, CSR and professional ethics"},
+    {t:"Digital Business & Technology Management",d:"Digital transformation strategy, IT governance, e-business and emerging technologies"},
+    {t:"International Business Management",d:"Global business strategy, cross-cultural management and international market entry"},
+    {t:"Project Management",d:"Project planning, execution, monitoring and stakeholder management methodologies"},
+    {t:"Management Capstone / Consultancy Project",d:"Applying management skills to a real organisational problem with a formal deliverable"},
+  ],
+  "emba":[
+    {t:"Executive Leadership & Personal Effectiveness",d:"Senior leadership competencies, executive presence, self-awareness and leadership development"},
+    {t:"Strategic Management & Corporate Strategy",d:"Corporate strategy, portfolio management, competitive dynamics and strategic execution"},
+    {t:"Executive Financial Management",d:"Financial decision-making, shareholder value, M&A and executive-level financial analysis"},
+    {t:"Marketing Strategy & Growth",d:"Strategic marketing, growth hacking, customer strategy and brand leadership at executive level"},
+    {t:"People Strategy & Organisational Design",d:"Workforce strategy, org design, talent, culture and people analytics for senior leaders"},
+    {t:"Operations Strategy & Digital Transformation",d:"Operational excellence, digital disruption, Industry 4.0 and technology strategy"},
+    {t:"Corporate Governance, Ethics & Stakeholder Management",d:"Board-level governance, fiduciary duties, ESG, ethics and managing stakeholder expectations"},
+    {t:"Innovation, Entrepreneurship & Disruption",d:"Driving innovation, corporate entrepreneurship and managing business model disruption"},
+    {t:"Global Business & Geopolitics",d:"International business strategy, geopolitical risks, global leadership and cross-border management"},
+    {t:"Business Analytics & Data-Driven Decision Making",d:"Advanced analytics for executives, AI applications and data strategy for competitive advantage"},
+    {t:"Negotiation, Influence & Executive Communication",d:"High-stakes negotiation, persuasion, executive communication and managing crises"},
+    {t:"Sustainability, ESG & Responsible Business",d:"Integrating sustainability into strategy, ESG reporting and leading responsible organisations"},
+    {t:"Mergers, Acquisitions & Corporate Finance",d:"Deal structuring, due diligence, valuation, restructuring and post-merger integration"},
+    {t:"Executive Capstone / Strategic Business Project",d:"Addressing a strategic challenge in the executive's own organisation with board-level recommendations"},
+  ],
+  "dri":[
+    {t:"Principles of Risk Management",d:"Risk definitions, the risk management process, risk culture and enterprise risk frameworks"},
+    {t:"Risk Identification & Assessment",d:"Risk registers, risk mapping, qualitative and quantitative risk assessment techniques"},
+    {t:"Types of Risk",d:"Strategic, operational, financial, reputational, cyber, legal, regulatory and environmental risks"},
+    {t:"Insurance Principles & Concepts",d:"How insurance works, insurable interest, indemnity, subrogation and utmost good faith"},
+    {t:"General Insurance Products",d:"Property, liability, motor, marine, aviation and commercial insurance products"},
+    {t:"Life & Health Insurance",d:"Life assurance products, health insurance, group schemes and protection planning"},
+    {t:"Insurance Underwriting & Pricing",d:"Underwriting principles, risk assessment for insurers, rating methods and pricing models"},
+    {t:"Claims Management",d:"Claims process, investigation, loss assessment, settlement and claims fraud prevention"},
+    {t:"Reinsurance Principles",d:"Why and how reinsurance works, treaty vs facultative reinsurance and the global market"},
+    {t:"Financial Risk Management",d:"Market risk, credit risk, liquidity risk, hedging instruments and risk-adjusted returns"},
+    {t:"Regulatory Framework for Insurance",d:"Insurance regulation, solvency requirements, consumer protection and regulatory compliance"},
+    {t:"Risk Financing & Alternative Risk Transfer",d:"Self-insurance, captives, parametric insurance and alternative risk financing tools"},
+    {t:"Enterprise Risk Management (ERM)",d:"Holistic risk management, ISO 31000, COSO ERM framework and risk appetite statements"},
+    {t:"Risk & Insurance Capstone Project",d:"Applied risk assessment and insurance solution design for a real or case-study organisation"},
+  ],
+};
+
+/* ═══════════════════════════════════════════════
+   MASTERS RESEARCH BOX CONTENT
+   ═══════════════════════════════════════════════ */
+const RESEARCH_TOPICS = {
+  mba:["Dissertation (18,000–20,000 words) on a strategic management or business challenge","Applied consultancy project for an organisation with a formal report and presentation","Literature review synthesis across your two chosen electives","Research proposal submission at end of taught component"],
+  mim:["Independent research project examining a management challenge in an African or global context","Systematic literature review of management theory applied to a real case","Management consultancy report for an SME or NGO partner"],
+  mfinance:["Quantitative dissertation using real financial data and econometric modelling","Applied finance consultancy project with investment recommendations","Case study synthesis on corporate finance decision-making"],
+  maccounting:["Professional accounting research dissertation or ICAZ/ACCA-aligned project","Applied audit or tax advisory project with client organisation","Accounting case study integrating IFRS and governance issues"],
+  mmarketing:["Marketing dissertation exploring a brand, consumer or digital marketing challenge","Applied marketing consultancy project with campaign strategy deliverable","Literature review on consumer psychology or digital marketing effectiveness"],
+  mhrm:["HR research dissertation on a people management challenge in an organisation","HR audit and strategic recommendations project for a real employer","Evidence-based HR policy development project"],
+  mpm:["Project management dissertation on a PM methodology, sector application or PM failure analysis","Applied PM consultancy — project initiation and planning documents for a real project","Case study on programme management in a development or infrastructure context"],
+  mph:["MPH dissertation — epidemiological study, health systems analysis or programme evaluation","Applied public health project — needs assessment, programme design or policy brief","Systematic review of a public health intervention's evidence base"],
+  mha:["Health administration dissertation on a management challenge in a health facility or system","Applied health management consultancy project — operations review and recommendations","Health policy analysis and reform proposal for a local or national context"],
+  msw:["Social work dissertation using qualitative or mixed methods with a marginalised population","Practice research project arising from supervised field placement","Policy analysis and advocacy brief on a social issue"],
+  med:["Education research dissertation using classroom-based or institutional data","Curriculum design project for a specific subject or educational context","Policy evaluation of an education reform initiative"],
+  mme:["M&E dissertation — evaluation design and applied evaluation of a development programme","Applied M&E framework design with indicators and data collection tools for an organisation","Comparative analysis of M&E approaches across donors or sectors"],
+  mdevstudies:["Development studies dissertation examining poverty, governance or sustainability in context","Policy analysis and advocacy paper on a development challenge","Field-based research project with a development NGO or government programme"],
+  mir:["International relations dissertation on conflict, foreign policy, trade or multilateral governance","Comparative case study of states' responses to a global challenge","Policy analysis brief for a government ministry or international organisation"],
+  mgpp:["Governance and public policy dissertation — policy analysis, implementation or evaluation","Applied policy consultancy for a ministry, local authority or regulatory body","Comparative policy study across two or more countries or sectors"],
+  mda:["Analytics capstone — applied data science project solving a business problem with real data","Research dissertation on machine learning, BI strategy or data ethics","Analytics consultancy project with organisation-specific data and recommendations"],
+  mscm:["Supply chain dissertation examining resilience, sustainability, digital transformation or strategy","Applied SCM consultancy — supply chain audit and improvement recommendations","Case study comparing SCM practices across sectors or geographies"],
+  menvm:["Environmental management dissertation — EIA, climate, biodiversity or corporate sustainability","Applied environmental audit and management plan for an organisation or site","Policy analysis of an international environmental agreement's implementation"],
+  mlod:["Leadership and OD dissertation using action research or qualitative methods","Organisational development consultancy project — diagnosis and intervention plan","Leadership development programme design for an identified target group"],
+  meim:["Entrepreneurship dissertation — startup case study, ecosystem analysis or social enterprise evaluation","Business plan and investor pitch for a novel venture concept","Innovation management consultancy project for an established organisation"],
+  mgh:["Global health dissertation — epidemiology, health policy, health systems or digital health","Health programme evaluation or design project for a developing country context","Global health policy analysis and advocacy brief for an international health challenge"],
+  mthm:["Tourism and hospitality dissertation — destination management, sustainability or digital tourism","Applied hospitality management consultancy for a hotel, resort or destination","Tourism development plan or marketing strategy for a specific destination"],
+  mecon:["Economics dissertation using econometric methods and a rich dataset","Applied economic policy analysis and evidence-based policy recommendations","Systematic review of economic evidence on a development or policy question"],
+  murp:["Urban planning dissertation — housing, transport, sustainability or governance in urban context","Professional planning project — spatial analysis and planning proposal for a site or locality","Policy review of an urban development initiative with recommendations"],
+  mel:["Educational leadership dissertation — school improvement, policy, leadership practice or system change","Leadership inquiry project applying leadership theory to the participant's own institutional context","Strategic school improvement plan grounded in evidence and leadership theory"],
+  mhi:["Health informatics dissertation — EHR implementation, digital health, CDSS or health data analytics","Applied health IT project — system design, evaluation or implementation analysis","Case study of digital health innovation in a low-resource health setting"],
+};
+
+
+
+/* ═════════════════════════════════════════
+   CONSTANTS & STATE
+   ═════════════════════════════════════════ */
+const YT_KEYS = [
+  "AIzaSyCLwnB7ZXls_ZFzsPKLvIIPJhU60PdmkaY",
+  "AIzaSyCD0aLp0KJdBYcAE33AsC3fJUYjjzgWMhY",
+  "AIzaSyBy-sE2wgJJ-hD9mbUPHb1N1xtNhTPnmxw",
+  "AIzaSyDvXFDpkJkQYUxc05Qqr4NiTqc0gL5_2F4"
+];
+const WA_NUMBER = "265996982449";
+
+// Wizard state
+let wizardQuery   = "";
+let wizardLevel   = null;
+
+// Learner state
+let learnerModules = [];  // flat array: {yearLabel, semLabel, num, title, desc, type, globalIdx}
+let learnerIdx     = 0;
+let currentCourse  = "";
+
+// Resources state
+let currentUnit   = "";
+let currentTab    = "videos";
+let notesCache    = {};
+let rawNotesHTML  = "";
+let modalType     = "";
+
+document.getElementById("yr").textContent = new Date().getFullYear();
+document.getElementById("wizNameInput").addEventListener("keydown", e => { if(e.key==="Enter") wizardNext(1); });
+document.getElementById("unitInput").addEventListener("keydown", e => { if(e.key==="Enter") doUnitSearch(); });
+document.getElementById("purchaseModal").addEventListener("click", e => { if(e.target===e.currentTarget) closeModal(); });
+
+
+/* ═════════════════════════════════════════
+   STEP INDICATOR
+   ═════════════════════════════════════════ */
+function setStep(n) {
+  [1,2,3].forEach(i => {
+    const el = document.getElementById("step"+i);
+    el.classList.remove("active","done");
+    if(i < n) el.classList.add("done");
+    else if(i === n) el.classList.add("active");
+  });
+}
+
+
+/* ═════════════════════════════════════════
+   WIZARD NAVIGATION
+   ═════════════════════════════════════════ */
+function showWizScreen(n) {
+  document.querySelectorAll(".wizard-screen").forEach(s => s.classList.remove("active"));
+  document.getElementById("wScreen"+n).classList.add("active");
+  const titles = {
+    1:["Step 1 of 3 — Enter Your Course Name","Tell us what you'd like to study"],
+    2:["Step 2 of 3 — Choose Your Level","Select your qualification level"],
+    3:["Step 3 of 3 — Select Your Course","Click a course to begin learning"]
+  };
+  document.getElementById("wizPanelTitle").textContent = titles[n][0];
+  document.getElementById("wizPanelSub").textContent   = titles[n][1];
+}
+
+function wizardNext(fromStep) {
+  if(fromStep === 1) {
+    const q = document.getElementById("wizNameInput").value.trim();
+    if(!q) { document.getElementById("wizNameInput").style.borderColor="var(--red)"; setTimeout(()=>{document.getElementById("wizNameInput").style.borderColor="";},1500); return; }
+    wizardQuery = q;
+    showWizScreen(2);
+  } else if(fromStep === 2) {
+    if(!wizardLevel) {
+      // flash the cards
+      document.querySelectorAll(".level-card").forEach(c=>{c.style.borderColor="var(--red)";setTimeout(()=>c.style.borderColor="",1500);});
+      return;
+    }
+    renderCourseResults();
+    showWizScreen(3);
+  }
+}
+
+function wizardBack(fromStep) {
+  if(fromStep === 2) { showWizScreen(1); }
+  else if(fromStep === 3) { showWizScreen(2); }
+}
+
+function selectLevel(level, card) {
+  wizardLevel = level;
+  document.querySelectorAll(".level-card").forEach(c => c.classList.remove("selected"));
+  card.classList.add("selected");
+}
+
+function renderCourseResults() {
+  const q = wizardQuery.toLowerCase();
+  const allOfLevel = PROGRAMS.filter(p => p.level === wizardLevel);
+  const matched    = allOfLevel.filter(p => p.name.toLowerCase().includes(q));
+  const toShow     = matched.length > 0 ? matched : allOfLevel;
+
+  const levelLabel = {diploma:"Diploma",degree:"Degree",masters:"Masters"}[wizardLevel];
+  document.getElementById("resultsTitle").textContent = `${levelLabel} Programmes`;
+  document.getElementById("resultsCount").textContent =
+    matched.length > 0
+      ? `${toShow.length} match${toShow.length!==1?"es":""} for "${wizardQuery}"`
+      : `Showing all ${toShow.length} ${levelLabel} programmes`;
+
+  document.getElementById("resultsGrid").innerHTML = toShow.map(p => `
+    <div class="result-card" onclick="launchCourse('${p.key}')">
+      <span class="rc-num">${String(p.num).padStart(2,"0")}</span>
+      <span class="rc-name">${p.name}</span>
+      <svg class="rc-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>`).join("");
+}
+
+
+/* ═════════════════════════════════════════
+   LAUNCH COURSE → BUILD LEARNER MODULES
+   ═════════════════════════════════════════ */
+function launchCourse(key) {
+  const prog = PROGRAMS.find(p => p.key === key);
+  if(!prog) return;
+  currentCourse = prog.name;
+
+  // Build flat module list
+  learnerModules = buildLearnerModules(key, prog.level, prog.name);
+  learnerIdx = 0;
+
+  // Populate course header
+  const discipline = DISCIPLINE_MAP[key] || "Business & Management";
+  const dur  = {diploma:"12–18 Months", degree:"3–4 Years", masters:"12–24 Months"}[prog.level];
+  const cred = {diploma:"120 Credits",  degree:"360–480 Credits", masters:"180 Credits"}[prog.level];
+  document.getElementById("lrnLabel").textContent = prog.level.toUpperCase()+" PROGRAMME";
+  document.getElementById("lrnTitle").textContent = prog.name;
+  document.getElementById("lrnMeta").innerHTML =
+    `<span class="meta-pill">${dur}</span><span class="meta-pill">${cred}</span><span class="meta-pill">${discipline}</span>`;
+
+  // Research box (masters)
+  const rb = document.getElementById("researchBoxLrn");
+  if(prog.level === "masters") {
+    const topics = (RESEARCH_TOPICS[key]) || [
+      `Independent research dissertation (18,000–20,000 words) in ${prog.name}`,
+      "Applied consultancy project or professional report for an organisation",
+      "Systematic literature review on a chosen specialist theme",
+      "Research proposal submitted at end of taught component"
+    ];
+    rb.style.display = "block";
+    rb.innerHTML = `<div class="research-box-card" style="margin:0 22px 16px;"><h3>Research & Dissertation Component (Year 2)</h3><ul class="research-list">${topics.map(t=>`<li>${t}</li>`).join("")}</ul></div>`;
+  } else {
+    rb.style.display = "none";
+  }
+
+  // Build outline
+  buildOutline();
+
+  // Show learner section
+  document.getElementById("sec-wizard").style.display = "none";
+  document.getElementById("sec-learner").style.display = "block";
+  document.getElementById("sec-resources").style.display = "none";
+  setStep(2);
+
+  renderLearnerModule();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* Build flat module array with year/semester metadata */
+function buildLearnerModules(key, level, courseName) {
+  const mods = [];
+
+  if(level === "masters") {
+    const taught = (MASTERS_MODS[key]) ? MASTERS_MODS[key] : generateGenericMods(courseName,"masters");
+    taught.forEach((m, i) => {
+      mods.push({
+        yearLabel: "Year 1",
+        semLabel:  i < 4 ? "Semester 1" : "Semester 2",
+        num:       `MOD ${String(i+1).padStart(2,"0")}`,
+        title:     m.t,
+        desc:      m.d,
+        type:      "taught"
+      });
+    });
+    // Research year (individual tasks as navigable items)
+    const topics = RESEARCH_TOPICS[key] || [
+      `Independent research dissertation in ${courseName}`,
+      "Applied consultancy project for an organisation",
+      "Systematic literature review on a specialist theme",
+      "Research proposal submitted at end of taught component"
+    ];
+    topics.forEach((t, i) => {
+      mods.push({
+        yearLabel: "Year 2",
+        semLabel:  "Research Component",
+        num:       `RES ${String(i+1).padStart(2,"0")}`,
+        title:     t,
+        desc:      "",
+        type:      "research"
+      });
+    });
+
+  } else if(level === "degree") {
+    const years = DEGREE_PROG_YEARS[key] ? DEGREE_PROG_YEARS[key] : generateGenericDegreeYears(courseName);
+    years.forEach((yr, yi) => {
+      const half = Math.ceil(yr.modules.length / 2);
+      yr.modules.forEach((m, mi) => {
+        mods.push({
+          yearLabel: "Year " + (yi+1),
+          yearLong:  yr.label,
+          semLabel:  mi < half ? "Semester 1" : "Semester 2",
+          num:       `Y${yi+1}.${String(mi+1).padStart(2,"0")}`,
+          title:     m,
+          desc:      "",
+          type:      "core"
+        });
+      });
+    });
+
+  } else { // diploma
+    const taught = (DIPLOMA_MODS[key]) ? DIPLOMA_MODS[key] : generateGenericMods(courseName,"diploma");
+    taught.forEach((m, i) => {
+      mods.push({
+        yearLabel: "Year 1",
+        semLabel:  i < 7 ? "Semester 1" : "Semester 2",
+        num:       `MOD ${String(i+1).padStart(2,"0")}`,
+        title:     m.t,
+        desc:      m.d,
+        type:      "core"
+      });
+    });
+  }
+
+  return mods;
+}
+
+/* Render current module card */
+function renderLearnerModule() {
+  const m = learnerModules[learnerIdx];
+  const total = learnerModules.length;
+
+  // Breadcrumb
+  document.getElementById("bcYear").textContent = m.yearLabel;
+  document.getElementById("bcSem").textContent  = m.semLabel;
+  document.getElementById("bcMod").textContent  = m.num;
+  document.getElementById("lrnProgress").textContent = `${learnerIdx+1} / ${total}`;
+
+  // Progress bar
+  const pct = Math.round(((learnerIdx+1)/total)*100);
+  document.getElementById("progressBar").style.width = pct+"%";
+
+  // Module card
+  document.getElementById("mcBadge").textContent  = m.num;
+  document.getElementById("mcBadge").className    = "mc-badge" + (m.type==="research"?" research":"");
+  document.getElementById("mcTitle").textContent  = m.title;
+  document.getElementById("mcDesc").textContent   = m.desc || "";
+
+  // Module card animation
+  const card = document.getElementById("moduleCard");
+  card.style.animation = "none";
+  void card.offsetWidth;
+  card.style.animation = "fadeUp .3s ease both";
+
+  // Navigation buttons
+  document.getElementById("btnPrev").disabled = (learnerIdx === 0);
+  const isLast = learnerIdx === total - 1;
+  const btnNext = document.getElementById("btnNext");
+  if(isLast) {
+    btnNext.className = "nav-btn nav-btn-finish";
+    btnNext.innerHTML = `Finish <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>`;
+  } else {
+    btnNext.className = "nav-btn";
+    btnNext.innerHTML = `Next <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>`;
+  }
+
+  // Count badge
+  document.getElementById("modCountBadge").textContent = `${learnerIdx+1} of ${total}`;
+
+  // Highlight in outline
+  document.querySelectorAll(".outline-mod-item").forEach((el,i) => {
+    el.classList.toggle("current", i === learnerIdx);
+  });
+}
+
+function navigateModule(dir) {
+  const next = learnerIdx + dir;
+  if(next < 0) return;
+  if(next >= learnerModules.length) {
+    // Finished — go back to wizard
+    backToWizard();
+    return;
+  }
+  learnerIdx = next;
+  renderLearnerModule();
+  window.scrollTo({top: document.getElementById("sec-learner").offsetTop - 70, behavior:"smooth"});
+}
+
+
+/* ═════════════════════════════════════════
+   COURSE OUTLINE TREE
+   ═════════════════════════════════════════ */
+function buildOutline() {
+  // Group by year → semester
+  const tree = {};
+  learnerModules.forEach((m, globalIdx) => {
+    if(!tree[m.yearLabel]) tree[m.yearLabel] = {};
+    if(!tree[m.yearLabel][m.semLabel]) tree[m.yearLabel][m.semLabel] = [];
+    tree[m.yearLabel][m.semLabel].push({...m, globalIdx});
+  });
+
+  let html = "";
+  let flatIdx = 0;
+  for(const year in tree) {
+    html += `<div class="outline-year-group">
+      <div class="outline-year-label">${year}</div>`;
+    for(const sem in tree[year]) {
+      html += `<div class="outline-sem-group">
+        <div class="outline-sem-label">${sem}</div>`;
+      tree[year][sem].forEach(m => {
+        html += `<div class="outline-mod-item${m.globalIdx===learnerIdx?" current":""}" onclick="jumpToModule(${m.globalIdx})">
+          <span class="om-num">${m.num}</span>
+          <span class="om-title">${m.title}</span>
+        </div>`;
+        flatIdx++;
+      });
+      html += `</div>`;
+    }
+    html += `</div>`;
+  }
+  document.getElementById("outlineBody").innerHTML = html;
+}
+
+function toggleOutline() {
+  const body = document.getElementById("outlineBody");
+  const chevron = document.getElementById("outlineChevron");
+  const isOpen = body.classList.contains("open");
+  body.classList.toggle("open", !isOpen);
+  chevron.classList.toggle("open", !isOpen);
+  // Re-sync highlight
+  if(!isOpen) {
+    document.querySelectorAll(".outline-mod-item").forEach((el, i) => {
+      el.classList.toggle("current", i === learnerIdx);
+    });
+  }
+}
+
+function jumpToModule(idx) {
+  learnerIdx = idx;
+  renderLearnerModule();
+  // Scroll to module card
+  window.scrollTo({top: document.getElementById("moduleCard").offsetTop - 80, behavior:"smooth"});
+}
+
+
+/* ═════════════════════════════════════════
+   RESOURCE NAVIGATION
+   ═════════════════════════════════════════ */
+function openModuleResources() {
+  const m = learnerModules[learnerIdx];
+  document.getElementById("unitInput").value = m.title;
+  document.getElementById("sec-resources").style.display = "block";
+  document.getElementById("sec-resources").scrollIntoView({behavior:"smooth",block:"start"});
+  doUnitSearch();
+  setStep(3);
+}
+
+function backToLearner() {
+  document.getElementById("sec-resources").style.display = "none";
+  setStep(2);
+  document.getElementById("sec-learner").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function backToWizard() {
+  document.getElementById("sec-learner").style.display = "none";
+  document.getElementById("sec-resources").style.display = "none";
+  document.getElementById("sec-wizard").style.display = "block";
+  // Reset wizard to step 1
+  showWizScreen(1);
+  document.getElementById("wizNameInput").value = "";
+  wizardLevel = null;
+  document.querySelectorAll(".level-card").forEach(c => c.classList.remove("selected"));
+  setStep(1);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+
+/* ═════════════════════════════════════════
+   GENERIC MODULE GENERATORS (same as before)
+   ═════════════════════════════════════════ */
+function generateGenericMods(title, level) {
+  const count = level==="diploma" ? 14 : 8;
+  const base = [
+    {t:`Foundations of ${title}`,d:`Core principles, history, scope and professional context of ${title}`},
+    {t:"Research Methods",d:"Quantitative, qualitative and mixed methods approaches to academic research"},
+    {t:"Strategic Management",d:"Strategy formulation, competitive analysis and implementation frameworks"},
+    {t:"Leadership & Organisational Behaviour",d:"Leadership theories, team dynamics and managing people effectively"},
+    {t:"Financial Management",d:"Budgeting, financial analysis and resource management principles"},
+    {t:"Policy & Governance",d:"Regulatory frameworks, governance structures and policy analysis"},
+    {t:"Ethics & Professional Practice",d:"Professional codes, ethical decision-making and accountability"},
+    {t:"Capstone / Dissertation",d:`Applied final project or research dissertation in ${title}`},
+    {t:"Project Management",d:"Planning, executing, monitoring and closing projects successfully"},
+    {t:"Communication & Advocacy",d:"Professional writing, stakeholder communication and advocacy skills"},
+    {t:"Innovation & Change",d:"Managing innovation, driving change and adapting to dynamic environments"},
+    {t:"Data Analysis & Evidence",d:"Using data and evidence for informed decision-making"},
+    {t:"Monitoring & Evaluation",d:"Programme indicators, data collection, analysis and reporting"},
+    {t:"Field Practicum / Applied Project",d:"Hands-on applied learning in a professional or community setting"},
+  ];
+  return base.slice(0,count);
+}
+
+function generateGenericDegreeYears(title) {
+  return [
+    {label:"Year 1 — Foundations",modules:[`Introduction to ${title}`,"Academic Writing & Research Skills","Principles of Management","Introduction to Economics","Communication Skills","Quantitative Methods","Sociology & Society","Ethics & Professional Practice","Computer Applications"]},
+    {label:"Year 2 — Core Studies",modules:["Research Methods","Financial Management","Organisational Behaviour","Policy & Governance","Leadership Theory","Data Analysis","Programme Design","Legal Frameworks","Professional Skills Development"]},
+    {label:"Year 3 — Applied Studies",modules:["Strategic Management","Community & Field Practice","Change Management","Project Management","Monitoring & Evaluation","Elective Specialisation I","Elective Specialisation II","Industry Internship / Attachment","Capstone Preparation"]},
+    {label:"Year 4 — Advanced & Capstone",modules:["Advanced Strategic Leadership","Innovation & Entrepreneurship","Global Perspectives","Ethics & Governance","Emerging Issues in the Field","Advanced Research Methods","Elective Specialisation III","Capstone Research Project","Professional Development & Career Readiness"]},
+  ];
+}
+
+
+/* ═════════════════════════════════════════
+   MODAL
+   ═════════════════════════════════════════ */
+function openModal(type) {
+  modalType = type;
+  const isA = type==="assignment";
+  document.getElementById("modalTitle").textContent = isA ? "Unit Assignments" : "Unit Exams";
+  document.getElementById("modalUnit").textContent  = currentCourse || "General";
+  const p = document.getElementById("modalPrice");
+  p.textContent = isA ? "K5,000" : "K10,000";
+  p.style.color = isA ? "var(--amber)" : "var(--red)";
+  document.getElementById("purchaseModal").classList.add("open");
+}
+function closeModal() { document.getElementById("purchaseModal").classList.remove("open"); }
+function goWhatsApp() {
+  const label   = modalType==="assignment" ? "Assignments" : "Exams";
+  const cost    = modalType==="assignment" ? "K5,000" : "K10,000";
+  const subject = currentCourse || "General";
+  const text    = `Hello Excellence Assured, I am interested in purchasing the ${label} for: "${subject}" which costs ${cost}.`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`,"_blank");
+  closeModal();
+}
+
+
+/* ═════════════════════════════════════════
+   UNIT RESOURCE SEARCH
+   ═════════════════════════════════════════ */
+function setUnitStatus(msg, type) {
+  const s = document.getElementById("unitStatusBar");
+  if(!msg){ s.innerHTML=""; return; }
+  const cls = type==="ok"?"dot-green":type==="err"?"dot-red":"dot-amber";
+  s.innerHTML = `<span class="dot ${cls}"></span><span>${msg}</span>`;
+}
+
+async function doUnitSearch() {
+  const unit = document.getElementById("unitInput").value.trim();
+  if(!unit){ setUnitStatus("Please enter a unit name.","err"); return; }
+
+  const btn = document.getElementById("unitSearchBtn");
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> Searching…`;
+  setUnitStatus("Loading unit resources…","amber");
+  document.getElementById("videoGrid").innerHTML = `<div class="loading-row" style="grid-column:1/-1"><div class="spin"></div>Loading lectures…</div>`;
+
+  if(currentTab==="notes"){
+    document.getElementById("notesContent").innerHTML = `<div class="notes-loading"><div class="spin-ring"></div><span>Fetching notes…</span></div>`;
+  }
+
+  try {
+    const videos = await fetchYouTube(unit);
+    currentUnit  = unit;
+    notesCache   = {};
+    rawNotesHTML = "";
+
+    renderVideos(videos);
+
+    fetchNotes(unit).then(html=>{
+      rawNotesHTML = html;
+      notesCache[unit] = html;
+      if(currentTab==="notes") applyNotesRender(html);
+    });
+
+    setUnitStatus(`Resources loaded for: ${unit}`,"ok");
+  } catch(err) {
+    setUnitStatus(err.message||"Search failed.","err");
+    document.getElementById("videoGrid").innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Could not load videos</h3><p>${err.message||"Please try again."}</p></div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg> Find`;
+  }
+}
+
+
+/* ═════════════════════════════════════════
+   YOUTUBE & WIKIPEDIA
+   ═════════════════════════════════════════ */
+async function fetchYouTube(unit) {
+  for(let i=0; i<YT_KEYS.length; i++){
+    setUnitStatus(`Checking lecture server ${i+1}…`,"amber");
+    const params = new URLSearchParams({
+      part:"snippet", q:unit+" lecture",
+      type:"video", videoDuration:"long",
+      maxResults:"4", key:YT_KEYS[i]
+    });
+    try {
+      const res = await fetch(`https://www.googleapis.com/youtube/v3/search?${params}`);
+      if(res.status===403){ setUnitStatus(`Server ${i+1} busy, trying next…`,"amber"); continue; }
+      if(!res.ok) throw new Error(`Network error: ${res.status}`);
+      const data = await res.json();
+      if(data.items&&data.items.length) return data.items;
+    } catch(err){ console.error(`Key #${i+1}:`,err); }
+  }
+  throw new Error("System Busy: Please report to Excellence Assured at 0996982449.");
+}
+
+async function fetchNotes(unit) {
+  const q = unit.trim().replace(/^(unit|chapter|module|week)\s*\d+[:.]?\s*/i,"").trim();
+  if(!q) return "<p>No term to search.</p>";
+  const noMatch = `<p style='color:var(--text-soft);font-family:"JetBrains Mono",monospace;font-size:13px'>No Wikipedia article found for "<strong>${q}</strong>". Try a simpler module name.</p>`;
+  try {
+    const searchRes = await fetch(
+      `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&srlimit=1&format=json&origin=*`
+    );
+    const searchData = await searchRes.json();
+    const hit = searchData.query?.search?.[0];
+    if(!hit) return noMatch;
+    const exactTitle = hit.title;
+
+    const pageRes = await fetch(
+      `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=${encodeURIComponent(exactTitle)}&exintro=false&origin=*`
+    );
+    const pageData = await pageRes.json();
+    const pages = pageData.query?.pages;
+    const pageId = Object.keys(pages)[0];
+    if(pageId==="-1") return noMatch;
+    const extract = pages[pageId].extract;
+    if(!extract) return noMatch;
+
+    return `<p style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-soft);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--line);">📖 Wikipedia · <strong>${exactTitle}</strong></p>${extract.trim()}`;
+  } catch(e) {
+    console.error("Notes error",e);
+    return noMatch;
+  }
+}
+
+function renderVideos(items) {
+  const grid = document.getElementById("videoGrid");
+  if(!items||items.length===0){
+    grid.innerHTML = `<div class="empty-state fade-up"><div class="empty-icon">🔍</div><h3>No videos found</h3><p>Check spelling and try again.</p></div>`;
+    return;
+  }
+  grid.innerHTML = items.map((v,idx)=>{
+    const id    = v.id?.videoId;
+    const s     = v.snippet;
+    const thumb = s.thumbnails?.high?.url||s.thumbnails?.medium?.url||s.thumbnails?.default?.url;
+    const ch    = s.channelTitle||"";
+    const title = s.title||"";
+    return `<a class="video-card fade-up" style="animation-delay:${idx*70}ms" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener noreferrer">
+      <div class="thumb-wrap">
+        <img src="${thumb}" alt="${title.replace(/"/g,"")}" loading="lazy">
+        <div class="play-overlay"><div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-title">${title}</div>
+        <div class="video-channel">
+          <div class="ch-avatar">${ch.charAt(0).toUpperCase()}</div>
+          <span class="ch-name">${ch}</span>
+        </div>
+      </div>
+    </a>`;
+  }).join("");
+}
+
+function applyNotesRender(html) {
+  rawNotesHTML = html;
+  document.getElementById("notesContent").innerHTML = `<div class="fade-up">${html}</div>`;
+  document.getElementById("notesSearch").value="";
+  updateNotesStats();
+}
+
+function renderNotes() {
+  const el = document.getElementById("notesContent");
+  if(notesCache[currentUnit]){
+    applyNotesRender(notesCache[currentUnit]);
+  } else {
+    el.innerHTML = `<div class="notes-loading"><div class="spin-ring"></div><span>Fetching notes from Wikipedia…</span></div>`;
+    fetchNotes(currentUnit).then(html=>{
+      rawNotesHTML=html; notesCache[currentUnit]=html; applyNotesRender(html);
+    });
+  }
+}
+
+function highlightNotes() {
+  const term = document.getElementById("notesSearch").value.trim();
+  if(!rawNotesHTML) return;
+  if(!term){
+    document.getElementById("notesContent").innerHTML=`<div>${rawNotesHTML}</div>`;
+    updateNotesStats(0,0); return;
+  }
+  const stripped = rawNotesHTML.replace(/<mark[^>]*>(.*?)<\/mark>/gi,"$1");
+  const escaped  = term.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  let count=0;
+  const highlighted = stripped.replace(new RegExp(`(${escaped})`,"gi"),m=>{count++;return`<mark>${m}</mark>`;});
+  document.getElementById("notesContent").innerHTML=`<div>${highlighted}</div>`;
+  updateNotesStats(count,term);
+  const first=document.querySelector("mark");
+  if(first) first.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function updateNotesStats(count,term){
+  const el=document.getElementById("notesStats");
+  if(!term||count===undefined){el.textContent="";return;}
+  el.textContent=count?`${count} match${count!==1?"es":""}`:"No matches";
+}
+
+function switchTab(tab){
+  currentTab=tab;
+  document.getElementById("videosPanel").style.display=tab==="videos"?"block":"none";
+  document.getElementById("notesPanel").style.display =tab==="notes"?"block":"none";
+  document.getElementById("tabVideo").className="tab-btn"+(tab==="videos"?" t-active-v":"");
+  document.getElementById("tabNotes").className="tab-btn"+(tab==="notes"?" t-active-n":"");
+  if(tab==="notes"&&currentUnit) renderNotes();
+}
+
+</script>
+<script>
+// Keep existing non-module scripts if any, but wrap them or ensure they don't conflict
+</script>
+</body>
+</html>

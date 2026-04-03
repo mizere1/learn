@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Platform - Excellence Assured</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a4fba;
+            --primary-dark: #0f2d6b;
+            --accent: #ffb400;
+            --dark: #111827;
+            --light: #f8faff;
+            --text-dark: #111827;
+            --text-light: #fff;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+            --border: #bfdbfe;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 16px rgba(26,79,186,0.06);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #f0f4ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        header {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .logo-mark {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg,#3b82f6,#1d4ed8);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Auth Section */
+        .auth-section {
+            margin: 4rem auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) {
+            .auth-section {
+                flex-direction: row;
+            }
+        }
+
+        .auth-info {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 3rem 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-info h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .auth-forms {
+            flex: 1.2;
+            padding: 2.5rem;
+        }
+
+        .form-toggle {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray);
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .toggle-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Portal Section */
+        .portal-section {
+            display: none;
+            margin: 3rem auto;
+            width: 100%;
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .portal-grid {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            height: fit-content;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            border: 4px solid var(--light);
+        }
+
+        .learning-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            box-shadow: var(--box-shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .learning-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .learning-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .status-notice {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        .status-pending {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+        }
+
+        .status-rejected {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <div class="logo">
+                <div class="logo-mark">EA</div>
+                <span>Excellence Assured</span>
+            </div>
+            <div id="user-controls" class="hidden">
+                <button id="logout-button" style="width: auto; padding: 8px 16px; margin: 0; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Auth Section -->
+        <section id="auth-section" class="auth-section">
+            <div class="auth-info">
+                <h2>Welcome to Learning</h2>
+                <p>Access your courses, modules, and learning resources in one place.</p>
+            </div>
+            <div class="auth-forms">
+                <div class="form-toggle">
+                    <div class="toggle-btn active" onclick="showForm('login')">Login</div>
+                    <div class="toggle-btn" onclick="showForm('signup')">Register</div>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form active">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="login-email" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="login-password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit">Access Learning Platform</button>
+                </form>
+
+                <!-- Signup Form -->
+                <form id="signup-form" class="auth-form">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="signup-name" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="signup-email" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="signup-password" required placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label>Program of Interest</label>
+                        <select name="signup-program" required>
+                            <option value="">Select a program...</option>
+                            <option value="mba">MBA</option>
+                            <option value="bba">BBA</option>
+                            <option value="dpm">Diploma in Project Management</option>
+                        </select>
+                    </div>
+                    <button type="submit">Create Account</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Portal Section -->
+        <section id="portal-section" class="portal-section">
+            <div class="portal-grid">
+                <aside class="profile-card">
+                    <img id="profile-picture" src="https://via.placeholder.com/150" alt="Profile" class="profile-img">
+                    <h3 id="user-name">Loading...</h3>
+                    <p id="user-email">...</p>
+                </aside>
+
+                <div class="portal-main">
+                    <div id="request-access-section" class="status-notice status-pending hidden">
+                        <h3>Application Pending</h3>
+                        <p>Your account is currently being reviewed. You will gain access to the learning platform once approved.</p>
+                    </div>
+
+                    <div id="rejection-section" class="status-notice status-rejected hidden">
+                        <h3>Action Required</h3>
+                        <p id="rejection-reason"></p>
+                    </div>
+
+                    <div id="learning-access" class="hidden">
+                        <div class="learning-card">
+                            <div class="learning-icon"><i class="fas fa-graduation-cap"></i></div>
+                            <h2>Start Learning</h2>
+                            <p>Access your personalized curriculum, modules, and resources.</p>
+                            <a href="smart-learning.html" style="text-decoration: none;">
+                                <button style="margin-top: 2rem; font-size: 1.1rem;">Enter Learning Platform</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { auth, db } from './firebase-config.js';
+        import { onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+        import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+
+        window.showForm = (type) => {
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(type + '-form').classList.add('active');
+            event.target.classList.add('active');
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            const authSection = document.getElementById('auth-section');
+            const portalSection = document.getElementById('portal-section');
+            const userControls = document.getElementById('user-controls');
+
+            if (user) {
+                authSection.style.display = 'none';
+                portalSection.style.display = 'block';
+                userControls.classList.remove('hidden');
+
+                onValue(ref(db, 'users/' + user.uid), (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        document.getElementById('user-name').textContent = data.displayName || 'Student';
+                        document.getElementById('user-email').textContent = data.email;
+                        if (data.profilePictureURL) document.getElementById('profile-picture').src = data.profilePictureURL;
+
+                        const access = document.getElementById('learning-access');
+                        const pending = document.getElementById('request-access-section');
+                        const rejected = document.getElementById('rejection-section');
+
+                        access.classList.add('hidden');
+                        pending.classList.add('hidden');
+                        rejected.classList.add('hidden');
+
+                        if (data.isApproved == true) {
+                            access.classList.remove('hidden');
+                        } else if (data.applicationStatus === 'rejected') {
+                            rejected.classList.remove('hidden');
+                            document.getElementById('rejection-reason').textContent = "Reason: " + (data.rejectionReason || "Please contact support.");
+                        } else {
+                            pending.classList.remove('hidden');
+                        }
+                    }
+                });
+            } else {
+                authSection.style.display = 'flex';
+                portalSection.style.display = 'none';
+                userControls.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            signInWithEmailAndPassword(auth, e.target['login-email'].value, e.target['login-password'].value)
+                .catch(err => alert(err.message));
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = e.target['signup-name'].value;
+            const email = e.target['signup-email'].value;
+            const program = e.target['signup-program'].value;
+            createUserWithEmailAndPassword(auth, email, e.target['signup-password'].value)
+                .then(cred => {
+                    set(ref(db, 'users/' + cred.user.uid), {
+                        displayName: name,
+                        email: email,
+                        programOfInterest: program,
+                        isApproved: false,
+                        applicationStatus: 'pending',
+                        role: 'student'
+                    });
+                }).catch(err => alert(err.message));
+        });
+
+        document.getElementById('logout-button').addEventListener('click', () => signOut(auth));
+    </script>
+</body>
+</html>

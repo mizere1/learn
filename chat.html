@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal African College Chat</title>
+    <style>
+        :root {
+            --bg: #0b141a;
+            --panel: #111b21;
+            --bubble-in: #1f2c33;
+            --bubble-out: #005c4b;
+            --text: #e9edef;
+            --muted: #8696a0;
+            --accent: #25d366;
+            --shadow: rgba(0, 0, 0, 0.2);
+            --online: #00ff08;
+            --typing: #8696a0;
+            --radius: 18px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --warning: #ff5c5c;
+            --input-bg: #2a3942;
+        }
+
+        [data-theme="light"] {
+            --bg: #f0f2f5;
+            --panel: #ffffff;
+            --bubble-in: #ffffff;
+            --bubble-out: #d9fdd3;
+            --text: #3b4a54;
+            --muted: #667781;
+            --accent: #25d366;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --online: #34b7f1;
+            --typing: #667781;
+            --warning: #ff5c5c;
+            --input-bg: #f0f2f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Main Chat Area Styles */
+        .main-chat {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23121a21' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            background-color: var(--bg);
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background-color: var(--panel);
+            border-bottom: 1px solid rgba(134, 150, 160, 0.15);
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+        }
+
+        .contact-details h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: var(--text);
+        }
+
+        .status {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .online-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--online);
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .header-actions {
+            display: flex;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 8px;
+            margin-left: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover {
+            background-color: rgba(134, 150, 160, 0.1);
+        }
+
+        .icon-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--muted);
+        }
+
+        .message-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            max-height: calc(100vh - 140px);
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            max-width: 70%;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .message-in {
+            align-self: flex-start;
+        }
+
+        .message-out {
+            align-self: flex-end;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            position: relative;
+            word-wrap: break-word;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .message-in .message-bubble {
+            background: linear-gradient(145deg, var(--bubble-in), #2a3c45);
+            border-left: 3px solid var(--accent);
+        }
+
+        .message-out .message-bubble {
+            background-color: var(--bubble-out);
+            border-right: 3px solid var(--accent);
+        }
+
+        .message-meta {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 5px;
+            font-size: 11px;
+            color: var(--muted);
+            align-items: center;
+        }
+
+        .message-time {
+            margin-right: 5px;
+        }
+
+        .message-status {
+            display: flex;
+            align-items: center;
+        }
+
+        .message-actions {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: none;
+            background: var(--panel);
+            border-radius: 20px;
+            padding: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 5;
+        }
+
+        .message-out .message-actions {
+            right: calc(100% + 10px);
+        }
+
+        .message-in .message-actions {
+            left: calc(100% + 10px);
+        }
+
+        .message.active .message-actions {
+            display: flex;
+        }
+
+        .message-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            color: var(--muted);
+            font-size: 16px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .message-action-btn:hover {
+            background: rgba(134, 150, 160, 0.1);
+            color: var(--text);
+        }
+
+        .delete-btn:hover {
+            color: var(--warning);
+            background: rgba(255, 92, 92, 0.1);
+        }
+
+        .typing-indicator {
+            background-color: var(--bubble-in);
+            padding: 10px 15px;
+            border-radius: var(--radius);
+            align-self: flex-start;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: var(--typing);
+            display: inline-block;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: typing 1.3s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .composer {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--panel);
+            border-top: 1px solid rgba(134, 150, 160, 0.15);
+            position: relative;
+            z-index: 10;
+        }
+
+        .composer-actions {
+            display: flex;
+            margin-right: 15px;
+        }
+
+        .message-input-container {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: var(--input-bg);
+            border-radius: 20px;
+            padding: 0 15px;
+            transition: var(--transition);
+        }
+
+        .message-input {
+            flex-grow: 1;
+            padding: 12px 0;
+            border: none;
+            background-color: transparent;
+            color: var(--text);
+            font-size: 15px;
+            resize: none;
+            max-height: 120px;
+            min-height: 20px;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .message-input:focus {
+            outline: none;
+        }
+
+        .message-input-container:focus-within {
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+
+        .send-btn {
+            background-color: var(--accent);
+            margin-left: 15px;
+            transition: var(--transition);
+        }
+
+        .send-btn svg {
+            fill: white;
+        }
+
+        .send-btn:hover {
+            background-color: #20bd5c;
+            transform: scale(1.05);
+        }
+
+        /* Emoji Picker */
+        .emoji-picker {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            background-color: var(--panel);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+            padding: 15px;
+            width: 250px;
+            display: none;
+            z-index: 100;
+        }
+
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+
+        .emoji-grid span {
+            font-size: 24px;
+            cursor: pointer;
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .emoji-grid span:hover {
+            background-color: rgba(134, 150, 160, 0.1);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--shadow);
+            font-size: 20px;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        /* Edit Message Modal */
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .edit-modal-content {
+            background-color: var(--panel);
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .edit-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .edit-modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .edit-modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--muted);
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(134, 150, 160, 0.3);
+            background-color: var(--bg);
+            color: var(--text);
+            font-size: 15px;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .edit-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .edit-modal-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .edit-cancel {
+            background-color: transparent;
+            color: var(--muted);
+        }
+
+        .edit-save {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        /* Expiry notice for bot messages */
+        .expiry-notice {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        /* Message selection overlay */
+        .message-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: var(--radius);
+            display: none;
+        }
+
+        .message.active .message-overlay {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+
+            .chat-header {
+                padding: 10px 15px;
+            }
+
+            .message-container {
+                padding: 10px;
+                max-height: calc(100vh - 120px);
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+            
+            .composer {
+                padding: 10px;
+            }
+
+            .message-input {
+                font-size: 14px;
+            }
+
+            .composer-actions {
+                margin-right: 10px;
+            }
+
+            .send-btn {
+                margin-left: 10px;
+            }
+            
+            .emoji-picker {
+                width: 90vw;
+                max-width: 300px;
+                bottom: 70px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .message-actions {
+                display: flex !important;
+                opacity: 0.9;
+            }
+        }
+
+        /* Course list styles */
+        .course-list {
+            padding: 10px 0;
+        }
+
+        .course-item {
+            padding: 8px 15px;
+            margin: 5px 0;
+            background-color: rgba(134, 150, 160, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .course-item:hover {
+            background-color: rgba(134, 150, 160, 0.2);
+        }
+
+        .course-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .course-desc {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        /* Fee highlight */
+        .fee-highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .message-bubble ul {
+            list-style-position: inside;
+            padding-left: 10px;
+            margin-top: 10px;
+        }
+
+        .message-bubble li {
+            margin-bottom: 8px;
+        }
+
+        /* Scrollbar styling */
+        .message-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .message-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .message-container::-webkit-scrollbar-thumb {
+            background: rgba(134, 150, 160, 0.3);
+            border-radius: 3px;
+        }
+
+        .message-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(134, 150, 160, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Chat Area -->
+        <div class="main-chat">
+            <div class="chat-header">
+                <div class="contact-info">
+                    <div class="avatar">C</div>
+                    <div class="contact-details">
+                        <h2>Chipi</h2>
+                        <span class="status"><span class="online-indicator"></span>AI assistant · online</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" aria-label="Mute" style="font-size: 20px;">🤫</button>
+                    <button class="icon-btn" aria-label="Info">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="message-container">
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <div class="composer">
+                <div class="composer-actions">
+                    <button class="icon-btn emoji-btn" aria-label="Add emoji" style="font-size: 22px;">😊</button>
+                    <button class="icon-btn" aria-label="Attach file">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="message-input-container">
+                    <textarea placeholder="Type a message" class="message-input"></textarea>
+                </div>
+                <button class="icon-btn send-btn" aria-label="Send message">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emoji Picker -->
+    <div class="emoji-picker">
+        <div class="emoji-grid">
+            <span>😀</span><span>😂</span><span>😍</span><span>🤔</span><span>👍</span>
+            <span>❤️</span><span>🎉</span><span>😊</span><span>🙏</span><span>🔥</span>
+            <span>😎</span><span>😢</span><span>😡</span><span>🤯</span><span>👏</span>
+            <span>👋</span><span>🎂</span><span>🎁</span><span>✅</span><span>❌</span>
+            <span>😴</span><span>🥳</span><span>🤗</span><span>😋</span><span>🤩</span>
+            <span>🤪</span><span>😇</span><span>🥺</span><span>🤠</span><span>🤓</span>
+        </div>
+    </div>
+
+    <!-- Edit Message Modal -->
+    <div class="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <div class="edit-modal-title">Edit Message</div>
+                <button class="edit-modal-close">&times;</button>
+            </div>
+            <textarea class="edit-input" placeholder="Edit your message"></textarea>
+            <div class="edit-modal-actions">
+                <button class="edit-modal-btn edit-cancel">Cancel</button>
+                <button class="edit-modal-btn edit-save">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
+
+    <!-- Load the Gemini API -->
+    <script type="module">
+        import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const messageContainer = document.querySelector('.message-container');
+            const messageInput = document.querySelector('.message-input');
+            const sendButton = document.querySelector('.send-btn');
+            const emojiButton = document.querySelector('.emoji-btn');
+            const emojiPicker = document.querySelector('.emoji-picker');
+            const themeToggle = document.querySelector('.theme-toggle');
+            const typingIndicator = document.querySelector('.typing-indicator');
+            const editModal = document.querySelector('.edit-modal');
+            const editInput = document.querySelector('.edit-input');
+            const editClose = document.querySelector('.edit-modal-close');
+            const editCancel = document.querySelector('.edit-cancel');
+            const editSave = document.querySelector('.edit-save');
+            
+            // Initialize conversation from localStorage
+            let conversation = JSON.parse(localStorage.getItem('royalAfricanConversation')) || [];
+            const conversationId = 'chipi';
+            
+            // Track message being edited
+            let editingMessageId = null;
+            let activeMessage = null;
+            
+            // College information
+            const collegeInfo = {
+                name: "Royal African College",
+                courses: [
+                    {
+                        name: "Bachelor of Business Administration (BBA)",
+                        description: "Focus on management, finance, marketing, and entrepreneurship",
+                        duration: "4 years",
+                        requirements: "High school diploma or equivalent"
+                    },
+                    {
+                        name: "Bachelor of Computer Science (BCS)",
+                        description: "Software development, AI, data science, and cybersecurity",
+                        duration: "4 years",
+                        requirements: "High school diploma with mathematics background"
+                    },
+                    {
+                        name: "Bachelor of Education (BEd)",
+                        description: "Educational theory, teaching methods, and curriculum development",
+                        duration: "4 years",
+                        requirements: "High school diploma or equivalent"
+                    },
+                    {
+                        name: "Bachelor of Public Health (BPH)",
+                        description: "Community health, epidemiology, and health policy",
+                        duration: "4 years",
+                        requirements: "High school diploma or equivalent"
+                    },
+                    {
+                        name: "Master of Business Administration (MBA)",
+                        description: "Advanced business leadership and strategic management",
+                        duration: "2 years",
+                        requirements: "Bachelor's degree in any field"
+                    }
+                ],
+                fees: {
+                    application: 45000,
+                    semester: 350000
+                },
+                benefits: [
+                    "100% online learning",
+                    "Globally recognized accreditation",
+                    "Flexible self-paced study",
+                    "Pan-African access and support"
+                ]
+            };
+            
+            // IMPORTANT: Never hardcode API keys in your code. 
+            // Replace this with your actual Gemini API key, preferably loaded from a secure environment.
+            const geminiApiKey = "AIzaSyBKPp3FroPSwT0FZYcPRUxuisdDxYBu-Tg";
+            let geminiModel = null;
+            
+            // Initialize Gemini
+            function initializeGemini(apiKey) {
+                if (!apiKey || apiKey === "YOUR_GEMINI_API_KEY") {
+                    addMessage('assistant', "Welcome! This is a demo of the Royal African College AI assistant. The AI is currently offline. Please configure your API key to enable it.");
+                    return;
+                }
+                try {
+                    const genAI = new GoogleGenerativeAI(apiKey);
+                    geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+                    
+                    // Render existing conversation
+                    renderConversation();
+
+                    // Add a welcome message if this is a new conversation
+                    if (conversation.length === 0) {
+                        addMessage('assistant', "Hello! Welcome to Royal African College. I'm Chipi, your AI assistant. How can I help you today?");
+                    }
+                    
+                    // Start bot message expiry check
+                    checkBotMessageExpiry();
+                } catch (error) {
+                    console.error("Error initializing Gemini:", error);
+                    addMessage('assistant', "I'm sorry, there was an error initializing the AI. Please check your API key and try refreshing the page.");
+                }
+            }
+
+            // Initial setup
+            initializeGemini(geminiApiKey);
+            
+            // Auto-resize textarea
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+            
+            // Send message on button click
+            sendButton.addEventListener('click', sendMessage);
+            
+            // Send message on Enter (but allow Shift+Enter for new line)
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Toggle emoji picker
+            emojiButton.addEventListener('click', function() {
+                emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            // Add emoji to message input
+            document.querySelectorAll('.emoji-grid span').forEach(emoji => {
+                emoji.addEventListener('click', function() {
+                    messageInput.value += this.textContent;
+                    messageInput.focus();
+                    emojiPicker.style.display = 'none';
+                });
+            });
+            
+            // Theme toggle
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                this.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+                localStorage.setItem('theme', newTheme);
+            });
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+            }
+            
+            // Close emoji picker when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!emojiButton.contains(e.target) && !emojiPicker.contains(e.target)) {
+                    emojiPicker.style.display = 'none';
+                }
+            });
+            
+            // Edit modal handlers
+            editClose.addEventListener('click', closeEditModal);
+            editCancel.addEventListener('click', closeEditModal);
+            
+            editSave.addEventListener('click', function() {
+                if (editingMessageId !== null && editInput.value.trim() !== '') {
+                    updateMessage(editingMessageId, editInput.value.trim());
+                    closeEditModal();
+                }
+            });
+            
+            // Close modal on outside click
+            editModal.addEventListener('click', function(e) {
+                if (e.target === editModal) {
+                    closeEditModal();
+                }
+            });
+            
+            // Click outside to deselect message
+            document.addEventListener('click', function(e) {
+                if (activeMessage && !e.target.closest('.message') && !e.target.closest('.message-actions')) {
+                    activeMessage.classList.remove('active');
+                    activeMessage = null;
+                }
+            });
+            
+            // Function to close edit modal
+            function closeEditModal() {
+                editModal.style.display = 'none';
+                editingMessageId = null;
+                editInput.value = '';
+            }
+            
+            // Function to send message
+            async function sendMessage() {
+                const messageText = messageInput.value.trim();
+                if (messageText === '') return;
+                
+                // Add user message to conversation
+                addMessage('user', messageText);
+                
+                // Clear input and reset height
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                try {
+                    // Generate AI response using Gemini
+                    let aiResponse = await generateAIResponse(messageText);
+                    
+                    // Add AI response to conversation with expiry time
+                    addMessage('assistant', aiResponse, true);
+                    
+                    // Save to localStorage
+                    saveConversation();
+                } catch (error) {
+                    console.error("Error generating response:", error);
+                    addMessage('assistant', "I'm sorry, I encountered an error processing your request. Please try again.");
+                } finally {
+                    // Hide typing indicator
+                    hideTypingIndicator();
+                    
+                    // Scroll to bottom
+                    scrollToBottom();
+                }
+            }
+            
+            // Function to add message to UI and conversation array
+            function addMessage(role, content, isBotWithExpiry = false) {
+                const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                const id = Date.now() + Math.random().toString(36).substr(2, 5);
+                
+                // Add to conversation array
+                const messageData = {
+                    id: id,
+                    role: role,
+                    content: content,
+                    timestamp: timestamp,
+                    created: Date.now()
+                };
+                
+                // Add expiry time for bot messages (5 hours)
+                if (isBotWithExpiry && role === 'assistant') {
+                    messageData.expires = Date.now() + (5 * 60 * 60 * 1000); // 5 hours from now
+                }
+                
+                conversation.push(messageData);
+                
+                // Render the new message
+                renderMessage(messageData);
+                
+                // Save conversation
+                saveConversation();
+            }
+            
+            // Function to update a message
+            function updateMessage(messageId, newContent) {
+                const messageIndex = conversation.findIndex(msg => msg.id === messageId);
+                
+                if (messageIndex !== -1) {
+                    conversation[messageIndex].content = newContent;
+                    conversation[messageIndex].edited = true;
+                    
+                    // Re-render the message
+                    const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+                    if (messageElement) {
+                        const bubble = messageElement.querySelector('.message-bubble');
+                        bubble.innerHTML = formatResponse(newContent);
+                        
+                        // Update timestamp to show edited status
+                        const meta = messageElement.querySelector('.message-meta');
+                        const timeElement = meta.querySelector('.message-time');
+                        timeElement.textContent = conversation[messageIndex].timestamp + ' (edited)';
+                    }
+                    
+                    // Save conversation
+                    saveConversation();
+                }
+            }
+            
+            // Function to delete a message
+            function deleteMessage(messageId) {
+                const messageIndex = conversation.findIndex(msg => msg.id === messageId);
+                
+                if (messageIndex !== -1) {
+                    // Remove from conversation array
+                    conversation.splice(messageIndex, 1);
+                    
+                    // Remove from DOM
+                    const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+                    if (messageElement) {
+                        messageElement.remove();
+                    }
+                    
+                    // Save conversation
+                    saveConversation();
+                }
+            }
+            
+            // Function to check and remove expired bot messages
+            function checkBotMessageExpiry() {
+                const now = Date.now();
+                let needsUpdate = false;
+                
+                // Check each message for expiry
+                for (let i = conversation.length - 1; i >= 0; i--) {
+                    const message = conversation[i];
+                    
+                    if (message.role === 'assistant' && message.expires && message.expires < now) {
+                        // Remove expired message
+                        conversation.splice(i, 1);
+                        needsUpdate = true;
+                        
+                        // Remove from DOM if exists
+                        const messageElement = document.querySelector(`[data-message-id="${message.id}"]`);
+                        if (messageElement) {
+                            messageElement.remove();
+                        }
+                    }
+                }
+                
+                // Save if any messages were removed
+                if (needsUpdate) {
+                    saveConversation();
+                }
+                
+                // Check again in 1 minute
+                setTimeout(checkBotMessageExpiry, 60000);
+            }
+            
+            // Function to format bot responses
+            function formatResponse(text) {
+                // Convert markdown-style bold (**text**) to <b>text</b>
+                text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+                // Convert markdown-style lists (* item) to HTML lists
+                if (text.includes('* ')) {
+                    const lines = text.split('\n');
+                    let html = '';
+                    let inList = false;
+                    for (const line of lines) {
+                        if (line.trim().startsWith('* ')) {
+                            if (!inList) {
+                                html += '<ul>';
+                                inList = true;
+                            }
+                            html += `<li>${line.trim().substring(2)}</li>`;
+                        } else {
+                            if (inList) {
+                                html += '</ul>';
+                                inList = false;
+                            }
+                            html += `<p>${line}</p>`;
+                        }
+                    }
+                    if (inList) {
+                        html += '</ul>';
+                    }
+                    return html.replace(/<p><\/p>/g, ''); // Remove empty paragraphs
+                }
+                
+                return text;
+            }
+
+            // Function to render a message
+            function renderMessage(messageData) {
+                const messageEl = document.createElement('div');
+                messageEl.className = `message message-${messageData.role === 'user' ? 'out' : 'in'}`;
+                messageEl.setAttribute('data-message-id', messageData.id);
+                
+                const formattedContent = messageData.role === 'assistant' ? formatResponse(messageData.content) : messageData.content;
+                
+                let timeText = messageData.timestamp;
+                if (messageData.edited) {
+                    timeText += ' (edited)';
+                }
+                
+                messageEl.innerHTML = `
+                    <div class="message-overlay"></div>
+                    <div class="message-bubble">${formattedContent}</div>
+                    <div class="message-meta">
+                        <span class="message-time">${timeText}</span>
+                        ${messageData.role === 'user' ? '<div class="message-status">✓✓</div>' : ''}
+                    </div>
+                `;
+                
+                // Add expiry notice for bot messages
+                if (messageData.role === 'assistant' && messageData.expires) {
+                    const expiryNotice = document.createElement('div');
+                    expiryNotice.className = 'expiry-notice';
+                    expiryNotice.textContent = 'This message will expire in 5 hours';
+                    messageEl.querySelector('.message-meta').appendChild(expiryNotice);
+                }
+                
+                // Add action buttons for user messages
+                if (messageData.role === 'user') {
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'message-actions';
+                    actionsDiv.innerHTML = `
+                        <button class="message-action-btn edit-btn" title="Edit">✏️</button>
+                        <button class="message-action-btn delete-btn" title="Delete">🗑️</button>
+                    `;
+                    messageEl.appendChild(actionsDiv);
+                    
+                    // Add click event to show action buttons
+                    messageEl.addEventListener('click', function(e) {
+                        // Don't trigger if clicking on action buttons
+                        if (e.target.closest('.message-actions')) return;
+                        
+                        // Remove active class from other messages
+                        document.querySelectorAll('.message.active').forEach(msg => {
+                            if (msg !== messageEl) msg.classList.remove('active');
+                        });
+                        
+                        // Toggle active class on this message
+                        messageEl.classList.toggle('active');
+                        
+                        // Update active message reference
+                        if (messageEl.classList.contains('active')) {
+                            activeMessage = messageEl;
+                        } else {
+                            activeMessage = null;
+                        }
+                    });
+                    
+                    // Add event listeners for action buttons
+                    messageEl.querySelector('.edit-btn').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        openEditModal(messageData.id, messageData.content);
+                        messageEl.classList.remove('active');
+                    });
+                    
+                    messageEl.querySelector('.delete-btn').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        deleteMessage(messageData.id);
+                    });
+                }
+                
+                // The typing indicator is a direct sibling, so we insert the message before it
+                const typingIndicator = messageContainer.querySelector('.typing-indicator');
+                messageContainer.insertBefore(messageEl, typingIndicator);
+                scrollToBottom();
+            }
+            
+            // Function to open edit modal
+            function openEditModal(messageId, currentContent) {
+                editingMessageId = messageId;
+                editInput.value = currentContent;
+                editModal.style.display = 'flex';
+                editInput.focus();
+            }
+            
+            // Function to render entire conversation
+            function renderConversation() {
+                messageContainer.innerHTML = '';
+                
+                conversation.forEach(msg => {
+                    renderMessage(msg);
+                });
+                
+                // Add typing indicator
+                messageContainer.appendChild(typingIndicator);
+                
+                scrollToBottom();
+            }
+            
+            // Function to show typing indicator
+            function showTypingIndicator() {
+                typingIndicator.style.display = 'flex';
+                scrollToBottom();
+            }
+            
+            // Function to hide typing indicator
+            function hideTypingIndicator() {
+                typingIndicator.style.display = 'none';
+            }
+            
+            // Function to scroll to bottom of message container
+            function scrollToBottom() {
+                setTimeout(() => {
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                }, 100);
+            }
+            
+            // Function to save conversation to localStorage
+            function saveConversation() {
+                localStorage.setItem('royalAfricanConversation', JSON.stringify(conversation));
+            }
+            
+            // Function to generate AI response using Gemini API
+            async function generateAIResponse(userMessage) {
+                if (!geminiModel) {
+                    return "Gemini AI is not properly initialized. Please check your API key.";
+                }
+                
+                // Create context for the AI
+                const context = `
+                You are Chipi, an AI assistant for Royal African College. Your goal is to provide helpful and accurate information to prospective students.
+
+                **Key Information about Royal African College:**
+                - **Tuition:** All courses are 100% online and have **FREE TUITION**.
+                - **Fees:** We only charge a K35,000 application fee and a K200,000 graduation fee.
+                - **Lesson Style:** All lessons are self-paced, allowing you to study on your own schedule.
+                - **Contact:** For any questions, you can call us directly at 0996982449.
+
+                **Available Courses:**
+                - We offer a wide range of programs including Certificates, Diplomas, and Short Courses in various fields.
+                - We offer all courses apart from Law and Medicine.
+                - Our main degree programs include:
+                ${collegeInfo.courses.map(course => `  - **${course.name}**: ${course.description}`).join('\n')}
+
+                **Enrollment and Payment Process:**
+                1.  **Pay the Fee:** Pay the K35,000 application fee to one of these accounts:
+                    - **National Bank:** 1000048654
+                    - **Airtel Money:** 0996982449
+                    - **Standard Bank:** Account Name "Excellence Assured", Account Number 9100048654
+                2.  **Confirm Payment:** After paying, send a screenshot of the confirmation to 0996982449 on WhatsApp.
+                3.  **Join Enrollment Group:** For faster processing and support, please join our WhatsApp enrollment group here: https://chat.whatsapp.com/FuLtVEvX2IMAtenfq7TJdV
+                4.  **Sign Up Online:** Go to our website at www.royalafricancollege.mw and sign up for an account.
+                5.  **Approval:** Your account will show 'pending approval'. This is usually approved within an hour after you've sent your confirmation and joined the group.
+                6.  **Follow-up:** If your approval takes longer than one hour, please contact us at 0996982449.
+
+                **Your Persona:**
+                - You are a helpful human assistant named Chipi.
+                - Your answers must be direct, concise, and to the point.
+                - Keep it conversational and brief.
+                - If a user asks about enrollment, you **must** mention the WhatsApp group.
+                - If a user asks for a course list, format it as a simple bulleted list using asterisks. Do not list all courses unless explicitly asked.
+                - If a user asks if you offer a specific course (e.g., "Do you have a marketing degree?"), and it is not Law or Medicine, your answer should be a simple confirmation like "Yes, we do."`;
+                
+                try {
+                    // Combine context with conversation history
+                    const chat = geminiModel.startChat({
+                        history: [
+                            {
+                                role: "user",
+                                parts: [{text: context}]
+                            },
+                            {
+                                role: "model",
+                                parts: [{text: "Understood. I will act as Chipi, the AI assistant for Royal African College, and provide helpful information about courses, fees, and admissions, making sure to mention the WhatsApp group for enrollment."}]
+                            },
+                            ...conversation.map(msg => ({
+                                role: msg.role === 'user' ? 'user' : 'model',
+                                parts: [{text: msg.content}]
+                            }))
+                        ],
+                        generationConfig: {
+                            maxOutputTokens: 1000,
+                            temperature: 0.7,
+                        },
+                    });
+                    
+                    const result = await chat.sendMessage(userMessage);
+                    const response = await result.response;
+                    return response.text();
+                } catch (error) {
+                    console.error("Error calling Gemini API:", error);
+                    return "I'm sorry, I'm having trouble connecting to my brain right now. Please try again in a moment.";
+                }
+            }
+            
+            // Initial scroll to bottom
+            scrollToBottom();
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
